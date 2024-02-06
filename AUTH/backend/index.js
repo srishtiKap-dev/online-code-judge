@@ -4,8 +4,13 @@ const { DBConnection } = require("./database/db");
 const { config } = require("dotenv");
 require("dotenv").config();
 const PORT = process.env.PORT || config.env.PORT;
-const User = require("./model/User");
+const User = require("./model/User.js");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+//middleware to allow nodejs to read data from frontend
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 DBConnection();
 app.get("/", (req, res) => {
@@ -19,7 +24,7 @@ app.post("/register", async (req, res) => {
     const { firstname, lastname, username, password } = req.body;
 
     // validate ALL the data should exists
-    if (!firstname && !lastname && !username && !password) {
+    if (!firstname || !lastname || !username || !password) {
       return res.status(400).send("Please enter all the required details");
     }
 
@@ -36,7 +41,7 @@ app.post("/register", async (req, res) => {
       firstname,
       lastname,
       username,
-      hashedPassword
+      password: hashedPassword
     });
 
     // generate a JWT token for user & send
@@ -49,7 +54,7 @@ app.post("/register", async (req, res) => {
     userData.password = undefined;
     res
       .status(200)
-      .json({ message: "You have successfully reistered!", userData });
+      .json({ message: "You have successfully registered!", userData });
   } catch (error) {
     console.log("Error:" + error.message);
   }
