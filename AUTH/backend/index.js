@@ -7,6 +7,7 @@ const PORT = process.env.PORT || config.env.PORT;
 const User = require("./model/User.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
 //middleware to allow nodejs to read data from frontend
 app.use(express.json());
@@ -61,8 +62,52 @@ app.post("/register", async (req, res) => {
 });
 
 // login API
-app.post("/login", (req, res) => {
-  res.send("Login Page");
+app.post("/login", async (req, res) => {
+  try {
+    // get all the user data
+    const { username, password } = req.body;
+
+    // check if all data is provided by user
+    if (!username || !password) {
+      return res.status(400).send("Please enter all the required details");
+    }
+
+    // check if user exists in DB or not
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res
+        .status(200)
+        .send(`User ${username} does not exists. Please register.`);
+    }
+
+    // match the password
+    const enteredPassword = await bcrypt.compare(password, user.password);
+    if (!enteredPassword) {
+      return res.status(400).send("Incorrect Password.");
+    }
+
+    // create jwt token
+    const token = jwt.sign({ id: user._id, username }, process.env.SECRET_KEY, {
+      expiresIn: "1h"
+    });
+    user.token = token;
+    user.password = undefined;
+
+    // store cookies to the browser
+    const options = {
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      httpOnly: true // only manipulate by server & not manipulate by client/frontend
+    };
+
+    // send the token
+    res.status(200).cookie("token", token, options).json({
+      message: "You have successfully logged In!",
+      success: true,
+      token // optional
+    });
+  } catch (error) {
+    console.log("Error:" + error.message);
+  }
 });
 
 app.listen(PORT, () => {
