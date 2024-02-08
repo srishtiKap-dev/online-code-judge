@@ -5,6 +5,7 @@ const { config } = require("dotenv");
 require("dotenv").config();
 const PORT = process.env.PORT || config.env.PORT;
 const User = require("./model/User.js");
+const Question = require("./model/Question.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
@@ -22,17 +23,17 @@ app.get("/", (req, res) => {
 app.post("/register", async (req, res) => {
   try {
     // get all data from frontend
-    const { firstname, lastname, username, password } = req.body;
+    const { firstname, lastname, email, password } = req.body;
 
     // validate ALL the data should exists
-    if (!firstname || !lastname || !username || !password) {
+    if (!firstname || !lastname || !email || !password) {
       return res.status(400).send("Please enter all the required details");
     }
 
     // validate if user already exists or not
-    const doesUserExists = await User.findOne({ username });
+    const doesUserExists = await User.findOne({ email });
     if (doesUserExists) {
-      return res.status(200).send(`User ${username} already exists`);
+      return res.status(200).send(`User ${email} already exists`);
     }
     // encrypt the password
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -41,13 +42,14 @@ app.post("/register", async (req, res) => {
     const userData = await User.create({
       firstname,
       lastname,
-      username,
-      password: hashedPassword
+      email,
+      password: hashedPassword,
+      isAdmin: false
     });
 
     // generate a JWT token for user & send
     const token = jwt.sign(
-      { id: userData._id, username },
+      { id: userData._id, email },
       process.env.SECRET_KEY,
       { expiresIn: "1h" }
     );
@@ -65,19 +67,19 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     // get all the user data
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     // check if all data is provided by user
-    if (!username || !password) {
+    if (!email || !password) {
       return res.status(400).send("Please enter all the required details");
     }
 
     // check if user exists in DB or not
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     if (!user) {
       return res
         .status(200)
-        .send(`User ${username} does not exists. Please register.`);
+        .send(`User ${email} does not exists. Please register.`);
     }
 
     // match the password
@@ -87,7 +89,7 @@ app.post("/login", async (req, res) => {
     }
 
     // create jwt token
-    const token = jwt.sign({ id: user._id, username }, process.env.SECRET_KEY, {
+    const token = jwt.sign({ id: user._id, email }, process.env.SECRET_KEY, {
       expiresIn: "1h"
     });
     user.token = token;
@@ -105,6 +107,31 @@ app.post("/login", async (req, res) => {
       success: true,
       token // optional
     });
+  } catch (error) {
+    console.log("Error:" + error.message);
+  }
+});
+
+app.post("/question", async (req, res) => {
+  try {
+    // get all data from frontend
+    const { title, description, type, difficulty } = req.body;
+
+    // check all data should be entered
+    if (!title || !description || !type || !difficulty) {
+      return res.status(400).send("Please enter all the required details");
+    }
+
+    // save data in DB
+    const questionData = await Question.create({
+      title,
+      description,
+      type,
+      difficulty
+    });
+
+    // return response
+    res.status(200).json({ message: "New Question is created!", questionData });
   } catch (error) {
     console.log("Error:" + error.message);
   }
