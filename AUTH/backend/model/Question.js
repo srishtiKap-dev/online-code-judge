@@ -15,6 +15,9 @@ const questionSchema = new mongoose.Schema({
   },
   difficulty: {
     type: String
+  },
+  input: {
+    type: String
   }
 });
 

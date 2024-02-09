@@ -6,6 +6,7 @@ require("dotenv").config();
 const PORT = process.env.PORT || config.env.PORT;
 const User = require("./model/User.js");
 const Question = require("./model/Question.js");
+const TestCase = require("./model/TestCase.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
@@ -112,13 +113,14 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/question", async (req, res) => {
+// create question API
+app.post("/questions", async (req, res) => {
   try {
     // get all data from frontend
-    const { title, description, type, difficulty } = req.body;
+    const { title, description, type, difficulty, input, output } = req.body;
 
     // check all data should be entered
-    if (!title || !description || !type || !difficulty) {
+    if (!title || !description || !type || !difficulty || !input || !output) {
       return res.status(400).send("Please enter all the required details");
     }
 
@@ -130,10 +132,33 @@ app.post("/question", async (req, res) => {
       difficulty
     });
 
+    const testcaseData = await TestCase.create({
+      problemId: questionData._id,
+      input,
+      output
+    });
+
     // return response
-    res.status(200).json({ message: "New Question is created!", questionData });
+    res.status(200).json({
+      message: "New Question is created!",
+      questionData,
+      testcaseData
+    });
   } catch (error) {
     console.log("Error:" + error.message);
+  }
+});
+
+// get list of questions
+app.get("/questions", async (req, res) => {
+  try {
+    const questionList = await Question.find({});
+    res
+      .status(200)
+      .json({ message: "Fetched the questions successfully!", questionList });
+  } catch (error) {
+    console.log("Error:" + error.message);
+    return res.status(500).json({ message: error.message });
   }
 });
 
