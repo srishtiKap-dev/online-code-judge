@@ -14,12 +14,14 @@ function Login() {
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form className="space-y-6" action="#" method="POST">
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Email address
-            </label>
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Email address
+              </label>
+            </div>
             <div className="mt-2">
               <input
                 id="email"
@@ -40,14 +42,6 @@ function Login() {
               >
                 Password
               </label>
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
-                >
-                  Forgot password?
-                </a>
-              </div>
             </div>
             <div className="mt-2">
               <input
@@ -66,7 +60,7 @@ function Login() {
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Sign in
+              Sign In
             </button>
           </div>
         </form>
@@ -75,7 +69,7 @@ function Login() {
           Not a member?
           <a
             href="/signUp"
-            className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+            className="ml-2 font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
           >
             Sign Up Now!
           </a>
