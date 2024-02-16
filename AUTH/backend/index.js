@@ -10,8 +10,10 @@ const TestCase = require("./model/TestCase.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 //middleware to allow nodejs to read data from frontend
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
