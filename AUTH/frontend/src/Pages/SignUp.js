@@ -1,4 +1,26 @@
+import { useState } from "react";
+import axios from "axios";
+
 function SignUp() {
+  const url = "http://localhost:8080/register";
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+    const request = { firstname, lastname, email, password };
+    await axios
+      .post(url, request)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => {
+        console.log("Error occurred in Register API", error);
+      });
+  };
+
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -12,7 +34,12 @@ function SignUp() {
         </h2>
       </div>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" action="#" method="POST">
+        <form
+          className="space-y-6"
+          action="#"
+          method="POST"
+          onSubmit={handleSubmit}
+        >
           <div>
             <div className="flex items-center justify-between">
               <label
@@ -30,6 +57,7 @@ function SignUp() {
                 autoComplete="firstname"
                 required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                onChange={e => setFirstname(e.target.value)}
               />
             </div>
           </div>
@@ -51,6 +79,7 @@ function SignUp() {
                 autoComplete="lastname"
                 required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                onChange={e => setLastname(e.target.value)}
               />
             </div>
           </div>
@@ -72,6 +101,7 @@ function SignUp() {
                 autoComplete="email"
                 required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                onChange={e => setEmail(e.target.value)}
               />
             </div>
           </div>
@@ -93,6 +123,7 @@ function SignUp() {
                 autoComplete="current-password"
                 required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                onChange={e => setPassword(e.target.value)}
               />
             </div>
           </div>
