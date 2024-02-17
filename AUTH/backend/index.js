@@ -30,13 +30,15 @@ app.post("/register", async (req, res) => {
 
     // validate ALL the data should exists
     if (!firstname || !lastname || !email || !password) {
-      return res.status(400).send("Please enter all the required details");
+      return res
+        .status(400)
+        .json({ message: "Please enter all the required details" });
     }
 
     // validate if user already exists or not
     const doesUserExists = await User.findOne({ email });
     if (doesUserExists) {
-      return res.status(200).send(`User ${email} already exists`);
+      return res.status(400).json({ message: `User ${email} already exists` });
     }
     // encrypt the password
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -74,21 +76,23 @@ app.post("/login", async (req, res) => {
 
     // check if all data is provided by user
     if (!email || !password) {
-      return res.status(400).send("Please enter all the required details");
+      return res
+        .status(400)
+        .json({ message: "Please enter all the required details" });
     }
 
     // check if user exists in DB or not
     const user = await User.findOne({ email });
     if (!user) {
       return res
-        .status(200)
-        .send(`User ${email} does not exists. Please register.`);
+        .status(400)
+        .json({ message: `User ${email} does not exists. Please register` });
     }
 
     // match the password
     const enteredPassword = await bcrypt.compare(password, user.password);
     if (!enteredPassword) {
-      return res.status(400).send("Incorrect Password.");
+      return res.status(400).json({ message: "Incorrect Password." });
     }
 
     // create jwt token

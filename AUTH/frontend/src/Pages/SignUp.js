@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 function SignUp() {
   const url = "http://localhost:8080/register";
@@ -15,9 +16,15 @@ function SignUp() {
       .post(url, request)
       .then(res => {
         console.log(res);
+        toast.success(res.data.message, {
+          duration: 10000
+        });
       })
       .catch(error => {
         console.log("Error occurred in Register API", error);
+        toast.error(error.response.data.message, {
+          duration: 10000
+        });
       });
   };
 
@@ -148,6 +155,7 @@ function SignUp() {
           </a>
         </p>
       </div>
+      <Toaster />
     </div>
   );
 }
