@@ -1,4 +1,11 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 function NavBar() {
+  const nav = useNavigate();
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  console.log(isLoggedIn);
+
   return (
     <header className="bg-white">
       <nav
@@ -23,12 +30,27 @@ function NavBar() {
           >
             Sign up
           </a>
-          <a
-            href="/login"
-            className="text-sm font-semibold leading-6 text-gray-900"
-          >
-            Log in <span aria-hidden="true">&rarr;</span>
-          </a>
+          {isLoggedIn ? (
+            <button
+              onClick={() => {
+                setLoggedIn(false);
+                nav("/");
+              }}
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              Logout <span aria-hidden="true">&rarr;</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                setLoggedIn(true);
+                nav("/login");
+              }}
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              Login <span aria-hidden="true">&rarr;</span>
+            </button>
+          )}
         </div>
       </nav>
     </header>

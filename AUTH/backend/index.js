@@ -11,6 +11,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const { generateFile } = require("./compiler/generateFile.js");
+const { executeCpp } = require("./compiler/executeCpp.js");
+const { executeJava } = require("./compiler/executeJava.js");
+const { executePy } = require("./compiler/executePy.js");
 
 //middleware to allow nodejs to read data from frontend
 app.use(cors());
@@ -105,7 +109,7 @@ app.post("/login", async (req, res) => {
     // store cookies to the browser
     const options = {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      httpOnly: true // only manipulate by server & not manipulate by client/frontend
+      httpOnly: false // only manipulate by server & not manipulate by client/frontend
     };
 
     // send the token
@@ -165,6 +169,37 @@ app.get("/questions", async (req, res) => {
   } catch (error) {
     console.log("Error:" + error.message);
     return res.status(500).json({ message: error.message });
+  }
+});
+
+// run/compile code
+app.post("/run", async (req, res) => {
+  const { language, code } = req.body;
+  if (!language) {
+    return res.status(400).json({ message: "Please select language!" });
+  }
+  if (!code) {
+    return res.status(400).json({ success: false, error: "Empty code body" });
+  }
+
+  try {
+    const filePath = await generateFile(language, code);
+    var output = "";
+    switch (language) {
+      case "cpp":
+        output = await executeCpp(filePath);
+        break;
+      case "java":
+        output = await executeJava(filePath);
+        break;
+      case "py":
+        output = await executePy(filePath);
+        break;
+    }
+
+    res.json({ filePath, output });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
