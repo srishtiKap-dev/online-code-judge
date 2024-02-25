@@ -162,10 +162,25 @@ app.post("/questions", async (req, res) => {
 // get list of questions
 app.get("/questions", async (req, res) => {
   try {
-    const questionList = await Question.find({});
+    var orderByParam = { title: 1 };
+    const questionList = await Question.find({}).sort(orderByParam);
     res
       .status(200)
       .json({ message: "Fetched the questions successfully!", questionList });
+  } catch (error) {
+    console.log("Error:" + error.message);
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+// get a particular question based on title
+app.get("/question/description/:title", async (req, res) => {
+  try {
+    var title = req.params.title;
+    const questionDesc = await Question.find({ title });
+    res
+      .status(200)
+      .json({ message: "Fetched the description successfully!", questionDesc });
   } catch (error) {
     console.log("Error:" + error.message);
     return res.status(500).json({ message: error.message });

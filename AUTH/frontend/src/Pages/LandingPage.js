@@ -3,7 +3,7 @@ function LandingPage() {
   return (
     <div className="HomePage">
       <NavBar />
-      <h1 className="text-3xl font-bold">Welcome to Online Code Judge</h1>
+      <body className="text-5xl font-bold">Welcome to Online Code Judge</body>
     </div>
   );
 }

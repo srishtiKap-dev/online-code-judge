@@ -4,6 +4,7 @@ import SignUp from "./Pages/SignUp.js";
 import Login from "./Pages/Login.js";
 import LandingPage from "./Pages/LandingPage.js";
 import HomePage from "./Pages/HomePage.js";
+import Description from "./Pages/ProblemSubmission/Description.js";
 
 function App() {
   return (
@@ -13,6 +14,11 @@ function App() {
         <Route exact path="/signUp" element={<SignUp />}></Route>
         <Route exact path="/login" element={<Login />}></Route>
         <Route exact path="/home" element={<HomePage />}></Route>
+        <Route
+          exact
+          path="/description/:title"
+          element={<Description />}
+        ></Route>
       </Routes>
     </div>
   );

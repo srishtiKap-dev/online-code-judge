@@ -1,9 +1,12 @@
 import NavBar from "./NavigationBar";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 function HomePage() {
+  const nav = useNavigate();
   const [questionList, setQuestionList] = useState([]);
   const url = "http://localhost:8080/questions";
+  let { title } = useParams();
 
   // to load questions by default
   useEffect(() => {
@@ -15,18 +18,24 @@ function HomePage() {
       .get(url)
       .then(res => {
         setQuestionList(res.data.questionList);
-        console.log(res);
+        console.log("Here", questionList);
       })
       .catch(error => {
         console.log("Error occurred in GET Questions API", error);
       });
   };
 
+  const getProblemDescription = async question => {
+    console.log(question.title);
+    title = question.title;
+    nav("/description/" + title);
+  };
+
   return (
-    <div className="container">
+    <div>
       <NavBar />
-      <div className="relative overflow-x-auto sm:rounded-lg">
-        <table className="mx-auto w-4/5 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <div className="relative overflow-x-auto">
+        <table className="mx-auto w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
@@ -44,6 +53,7 @@ function HomePage() {
             {questionList.map((question, index) => {
               return (
                 <tr
+                  onClick={() => getProblemDescription(question)}
                   key={index}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >

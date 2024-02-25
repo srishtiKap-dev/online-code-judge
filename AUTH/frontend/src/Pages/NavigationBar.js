@@ -7,7 +7,7 @@ function NavBar() {
   console.log(isLoggedIn);
 
   return (
-    <header className="bg-white">
+    <header className="bg-black">
       <nav
         className="mx-auto flex max-w-7xl items-start justify-between p-6 lg:px-8"
         aria-label="Global"
@@ -23,10 +23,10 @@ function NavBar() {
             />
           </a>
         </div>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12 text-white">
           <a
             href="/signUp"
-            className="text-sm font-semibold leading-6 text-gray-900"
+            className="text-sm font-semibold leading-6 text-white-900"
           >
             Sign up
           </a>
@@ -36,7 +36,7 @@ function NavBar() {
                 setLoggedIn(false);
                 nav("/");
               }}
-              className="text-sm font-semibold leading-6 text-gray-900"
+              className="text-sm font-semibold leading-6 text-white-900"
             >
               Logout <span aria-hidden="true">&rarr;</span>
             </button>
@@ -46,7 +46,7 @@ function NavBar() {
                 setLoggedIn(true);
                 nav("/login");
               }}
-              className="text-sm font-semibold leading-6 text-gray-900"
+              className="text-sm font-semibold leading-6 text-white-900"
             >
               Login <span aria-hidden="true">&rarr;</span>
             </button>
