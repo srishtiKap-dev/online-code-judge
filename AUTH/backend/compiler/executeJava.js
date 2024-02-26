@@ -10,7 +10,7 @@ const executeJava = async filePath => {
   const randomUniqueString = path.basename(filePath).split(".")[0];
   const outFile = randomUniqueString + ".class";
   const outputPath = path.join(outputDirectory, outFile);
-  const mainClassName = "HelloWorld";
+  const mainClassName = "Test";
 
   return new Promise((resolve, reject) => {
     exec(
