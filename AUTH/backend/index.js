@@ -10,8 +10,14 @@ const TestCase = require("./model/TestCase.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const { generateFile } = require("./compiler/generateFile.js");
+const { executeCpp } = require("./compiler/executeCpp.js");
+const { executeJava } = require("./compiler/executeJava.js");
+const { executePy } = require("./compiler/executePy.js");
 
 //middleware to allow nodejs to read data from frontend
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -28,13 +34,15 @@ app.post("/register", async (req, res) => {
 
     // validate ALL the data should exists
     if (!firstname || !lastname || !email || !password) {
-      return res.status(400).send("Please enter all the required details");
+      return res
+        .status(400)
+        .json({ message: "Please enter all the required details" });
     }
 
     // validate if user already exists or not
     const doesUserExists = await User.findOne({ email });
     if (doesUserExists) {
-      return res.status(200).send(`User ${email} already exists`);
+      return res.status(400).json({ message: `User ${email} already exists` });
     }
     // encrypt the password
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -72,21 +80,23 @@ app.post("/login", async (req, res) => {
 
     // check if all data is provided by user
     if (!email || !password) {
-      return res.status(400).send("Please enter all the required details");
+      return res
+        .status(400)
+        .json({ message: "Please enter all the required details" });
     }
 
     // check if user exists in DB or not
     const user = await User.findOne({ email });
     if (!user) {
       return res
-        .status(200)
-        .send(`User ${email} does not exists. Please register.`);
+        .status(400)
+        .json({ message: `User ${email} does not exists. Please register` });
     }
 
     // match the password
     const enteredPassword = await bcrypt.compare(password, user.password);
     if (!enteredPassword) {
-      return res.status(400).send("Incorrect Password.");
+      return res.status(400).json({ message: "Incorrect Password." });
     }
 
     // create jwt token
@@ -99,7 +109,7 @@ app.post("/login", async (req, res) => {
     // store cookies to the browser
     const options = {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      httpOnly: true // only manipulate by server & not manipulate by client/frontend
+      httpOnly: false // only manipulate by server & not manipulate by client/frontend
     };
 
     // send the token
@@ -152,13 +162,59 @@ app.post("/questions", async (req, res) => {
 // get list of questions
 app.get("/questions", async (req, res) => {
   try {
-    const questionList = await Question.find({});
+    var orderByParam = { title: 1 };
+    const questionList = await Question.find({}).sort(orderByParam);
     res
       .status(200)
       .json({ message: "Fetched the questions successfully!", questionList });
   } catch (error) {
     console.log("Error:" + error.message);
     return res.status(500).json({ message: error.message });
+  }
+});
+
+// get a particular question based on title
+app.get("/question/description/:title", async (req, res) => {
+  try {
+    var title = req.params.title;
+    const questionDesc = await Question.find({ title });
+    res
+      .status(200)
+      .json({ message: "Fetched the description successfully!", questionDesc });
+  } catch (error) {
+    console.log("Error:" + error.message);
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+// run/compile code
+app.post("/run", async (req, res) => {
+  const { language, code } = req.body;
+  if (!language) {
+    return res.status(400).json({ message: "Please select language!" });
+  }
+  if (!code) {
+    return res.status(400).json({ success: false, error: "Empty code body" });
+  }
+
+  try {
+    const filePath = await generateFile(language, code);
+    var output = "";
+    switch (language) {
+      case "cpp":
+        output = await executeCpp(filePath);
+        break;
+      case "java":
+        output = await executeJava(filePath);
+        break;
+      case "py":
+        output = await executePy(filePath);
+        break;
+    }
+
+    res.json({ filePath, output });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
