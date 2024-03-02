@@ -8,6 +8,7 @@ import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
 import axios from "axios";
 function Description() {
+  const [input, setinput] = useState();
   const [language, setLanguage] = useState("cpp");
   const [code, setCode] = useState(`
   // Include the input/output stream library
@@ -45,8 +46,8 @@ function Description() {
   };
 
   const handleRun = async event => {
-    console.log(language);
-    const req = { language, code };
+    console.log(language, input);
+    const req = { language, code, input };
     await axios
       .post(runApi, req)
       .then(res => {
@@ -69,6 +70,18 @@ function Description() {
           </div>
 
           {questionDesc}
+          <div class="mt-60">
+            <label>Input</label>
+            <br></br>
+            <textarea
+              value={input}
+              onChange={e => {
+                setinput(e.target.value);
+              }}
+              class="min-h-[100px] w-9/12 resize-none rounded-[7px] border border-black-600 px-3 py-2.5 font-sans text-sm font-normal focus:border-1 focus:border-gray-900 focus:outline-0"
+              placeholder=" "
+            ></textarea>
+          </div>
         </div>
         <div>
           <select

@@ -12,9 +12,11 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { generateFile } = require("./compiler/generateFile.js");
+const { generateInputFile } = require("./compiler/generateInputFile.js");
 const { executeCpp } = require("./compiler/executeCpp.js");
 const { executeJava } = require("./compiler/executeJava.js");
 const { executePy } = require("./compiler/executePy.js");
+const { v4: uuid } = require("uuid"); // using v4 & alias name as uuid
 
 //middleware to allow nodejs to read data from frontend
 app.use(cors());
@@ -189,7 +191,7 @@ app.get("/question/description/:title", async (req, res) => {
 
 // run/compile code
 app.post("/run", async (req, res) => {
-  const { language, code } = req.body;
+  const { language, code, input } = req.body;
   if (!language) {
     return res.status(400).json({ message: "Please select language!" });
   }
@@ -198,21 +200,23 @@ app.post("/run", async (req, res) => {
   }
 
   try {
-    const filePath = await generateFile(language, code);
+    const randomUniqueId = uuid();
+    const filePath = await generateFile(language, code, randomUniqueId);
+    const inputPath = await generateInputFile(input, randomUniqueId);
     var output = "";
     switch (language) {
       case "cpp":
-        output = await executeCpp(filePath);
+        output = await executeCpp(filePath, inputPath);
         break;
       case "java":
-        output = await executeJava(filePath);
+        output = await executeJava(filePath, inputPath);
         break;
       case "py":
-        output = await executePy(filePath);
+        output = await executePy(filePath, inputPath);
         break;
     }
 
-    res.json({ filePath, output });
+    res.json({ filePath, output, inputPath });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
