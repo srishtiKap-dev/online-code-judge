@@ -191,7 +191,11 @@ app.get("/question/description/:title", async (req, res) => {
 
 // run/compile code
 app.post("/run", async (req, res) => {
-  const { language, code, input } = req.body;
+  const { language, code } = req.body;
+  var input = req.body.input;
+  if (!input) {
+    input = "";
+  }
   if (!language) {
     return res.status(400).json({ message: "Please select language!" });
   }
@@ -220,6 +224,26 @@ app.post("/run", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+// submit code
+app.post("/submit", async (req, res) => {
+  const { title, language, code } = req.body;
+
+  if (!language) {
+    return res.status(400).json({ message: "Please select language!" });
+  }
+  if (!code) {
+    return res.status(400).json({ success: false, error: "Empty code body" });
+  }
+
+  //Get testcase from DB based on problem title
+  //Create testcase input file in input folder
+  //Create code file in codes folder
+  //Run code and return output
+  //Match db output with output from above step
+  //If correct -> create entry in submission table & return success to UI
+  //If incorrect -> create entry in submission table & return failure to UI
 });
 
 app.listen(PORT, () => {

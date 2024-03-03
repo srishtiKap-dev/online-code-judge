@@ -27,6 +27,7 @@ function Description() {
   let { title } = useParams();
   const getDescriptionApi = `http://localhost:8080/question/description/${title}`;
   const runApi = "http://localhost:8080/run";
+  const submitApi = "http://localhost:8080/submit";
 
   // to load description page by default
   useEffect(() => {
@@ -46,7 +47,6 @@ function Description() {
   };
 
   const handleRun = async event => {
-    console.log(language, input);
     const req = { language, code, input };
     await axios
       .post(runApi, req)
@@ -58,6 +58,21 @@ function Description() {
           setOutput("Mismatch in language selected & code provided");
         }
         console.log("Error occurred in Run API", error.response.data.error);
+      });
+  };
+
+  const handleSubmit = async event => {
+    const req = { title, language, code };
+    await axios
+      .post(submitApi, req)
+      .then(res => {
+        setOutput(res.data.output);
+      })
+      .catch(error => {
+        if (error.response.data.error.includes("Command failed")) {
+          setOutput("Mismatch in language selected & code provided");
+        }
+        console.log("Error occurred in Submit API", error.response.data.error);
       });
   };
   return (
@@ -114,6 +129,12 @@ function Description() {
             class="bg-white-500 text-black py-2 px-4 rounded-lg border border-gray-300 py-1.5 px-4 mt-2"
           >
             Run
+          </button>
+          <button
+            onClick={handleSubmit}
+            class=" mx-4 bg-blue-500 text-black py-2 px-4 rounded-lg border border-blue-300 py-1.5 px-4 mt-2"
+          >
+            Submit
           </button>
           <br></br>
           {output && (
