@@ -228,22 +228,66 @@ app.post("/run", async (req, res) => {
 
 // submit code
 app.post("/submit", async (req, res) => {
-  const { title, language, code } = req.body;
+  try {
+    const { title, language, code } = req.body;
 
-  if (!language) {
-    return res.status(400).json({ message: "Please select language!" });
-  }
-  if (!code) {
-    return res.status(400).json({ success: false, error: "Empty code body" });
-  }
+    if (!language) {
+      return res.status(400).json({ message: "Please select language!" });
+    }
+    if (!code) {
+      return res.status(400).json({ success: false, error: "Empty code body" });
+    }
 
-  //Get testcase from DB based on problem title
-  //Create testcase input file in input folder
-  //Create code file in codes folder
-  //Run code and return output
-  //Match db output with output from above step
-  //If correct -> create entry in submission table & return success to UI
-  //If incorrect -> create entry in submission table & return failure to UI
+    //Get testcase array from DB based on problem title
+    var testCase = await TestCase.find().populate({
+      path: "problemId",
+      match: { title: req.body.title }
+    });
+
+    // shift : gets the object of 1st array
+    testCase = testCase.filter(z => z.problemId != null).shift();
+    var testCaseInput = testCase.input;
+    var testCaseOutput = testCase.output;
+
+    const randomUniqueId = uuid();
+
+    //Create code file in codes folder
+    const filePath = await generateFile(language, code, randomUniqueId);
+
+    //Create testcase input file in input folder
+    const inputPath = await generateInputFile(testCaseInput, randomUniqueId);
+
+    //Run code and return output
+    var userOutput = "";
+    switch (language) {
+      case "cpp":
+        userOutput = await executeCpp(filePath, inputPath);
+        break;
+      case "java":
+        userOutput = await executeJava(filePath, inputPath);
+        break;
+      case "py":
+        userOutput = await executePy(filePath, inputPath);
+        break;
+    }
+
+    //Match db output with output from above step
+    var output = "";
+    userOutput = userOutput.trim();
+    if (userOutput === testCaseOutput) {
+      console.log("Success");
+      output = "Code Submitted successfully";
+    } else {
+      console.log("Failure");
+      output = "Failure";
+    }
+    //If correct -> create entry in submission table & return success to UI
+    //If incorrect -> create entry in submission table & return failure to UI
+
+    res.json({ output });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 app.listen(PORT, () => {
