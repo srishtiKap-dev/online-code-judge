@@ -16,6 +16,7 @@ function Login() {
       .post(url, request)
       .then(res => {
         console.log(res);
+        localStorage.setItem("jwtToken", res.data.token);
         nav("/home");
       })
       .catch(error => {

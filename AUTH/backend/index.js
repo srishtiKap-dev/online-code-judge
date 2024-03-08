@@ -17,6 +17,7 @@ const { executeCpp } = require("./compiler/executeCpp.js");
 const { executeJava } = require("./compiler/executeJava.js");
 const { executePy } = require("./compiler/executePy.js");
 const { v4: uuid } = require("uuid"); // using v4 & alias name as uuid
+const Submission = require("./model/Submission.js");
 
 //middleware to allow nodejs to read data from frontend
 app.use(cors());
@@ -115,7 +116,7 @@ app.post("/login", async (req, res) => {
     };
 
     // send the token
-    res.status(200).cookie("token", token, options).json({
+    res.status(200).cookie("userId", token, options).json({
       message: "You have successfully logged In!",
       success: true,
       token // optional
@@ -229,7 +230,7 @@ app.post("/run", async (req, res) => {
 // submit code
 app.post("/submit", async (req, res) => {
   try {
-    const { title, language, code } = req.body;
+    const { title, language, code, token } = req.body;
 
     if (!language) {
       return res.status(400).json({ message: "Please select language!" });
@@ -241,7 +242,7 @@ app.post("/submit", async (req, res) => {
     //Get testcase array from DB based on problem title
     var testCase = await TestCase.find().populate({
       path: "problemId",
-      match: { title: req.body.title }
+      match: { title: title }
     });
 
     // shift : gets the object of 1st array
@@ -274,15 +275,29 @@ app.post("/submit", async (req, res) => {
     //Match db output with output from above step
     var output = "";
     userOutput = userOutput.trim();
+    var isSuccess = false;
     if (userOutput === testCaseOutput) {
-      console.log("Success");
-      output = "Code Submitted successfully";
+      isSuccess = true;
+      output = "Code Submitted successfully.";
     } else {
-      console.log("Failure");
-      output = "Failure";
+      output = "Code Submission failed due to wrong answer.";
     }
-    //If correct -> create entry in submission table & return success to UI
-    //If incorrect -> create entry in submission table & return failure to UI
+
+    // save submitted data in DB
+    var problemId = testCase.problemId._id;
+    var testCaseId = testCase._id;
+    var userData = jwt.verify(token, process.env.SECRET_KEY);
+    var userId = userData.id;
+    var timeStamp = Date.now();
+    var status = isSuccess ? "Passed" : "Failed";
+    await Submission.create({
+      problemId,
+      testCaseId,
+      userId,
+      code,
+      timeStamp,
+      status
+    });
 
     res.json({ output });
   } catch (error) {

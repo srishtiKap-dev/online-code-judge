@@ -62,7 +62,8 @@ function Description() {
   };
 
   const handleSubmit = async event => {
-    const req = { title, language, code };
+    var token = localStorage.getItem("jwtToken");
+    const req = { title, language, code, token };
     await axios
       .post(submitApi, req)
       .then(res => {
