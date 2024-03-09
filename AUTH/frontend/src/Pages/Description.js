@@ -1,6 +1,6 @@
-import NavBar from "../NavigationBar";
+import NavBar from "./NavigationBar";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-clike";
@@ -8,6 +8,7 @@ import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
 import axios from "axios";
 function Description() {
+  const nav = useNavigate();
   const [input, setinput] = useState();
   const [language, setLanguage] = useState("cpp");
   const [code, setCode] = useState(`

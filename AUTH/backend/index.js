@@ -288,12 +288,19 @@ app.post("/submit", async (req, res) => {
     var testCaseId = testCase._id;
     var userData = jwt.verify(token, process.env.SECRET_KEY);
     var userId = userData.id;
-    var timeStamp = Date.now();
+    const timeStamp = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Calcutta"
+    });
+    var languageSelected =
+      language == "cpp" ? "C++" : language == "java" ? "Java" : "Python";
+
+    console.log(language);
     var status = isSuccess ? "Passed" : "Failed";
     await Submission.create({
       problemId,
       testCaseId,
       userId,
+      language: languageSelected,
       code,
       timeStamp,
       status
@@ -302,6 +309,32 @@ app.post("/submit", async (req, res) => {
     res.json({ output });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// get submission History
+app.get("/submissionHistory", async (req, res) => {
+  try {
+    var submissionHistory = await Submission.find(
+      {},
+      { _id: 0, testCaseId: 0, code: 0 },
+      { sort: { submittedAt: -1 } }
+    )
+
+      .populate({
+        path: "problemId"
+      })
+      .populate({
+        path: "userId"
+      });
+
+    res.status(200).json({
+      message: "Fetched the submission history successfully!",
+      submissionHistory
+    });
+  } catch (error) {
+    console.log("Error:" + error.message);
+    return res.status(500).json({ message: error.message });
   }
 });
 

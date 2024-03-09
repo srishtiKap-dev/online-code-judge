@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const submissionSchema = new mongoose.Schema({
   problemId: {
     type: mongoose.SchemaTypes.ObjectId,
-    required: true
+    required: true,
+    ref: "question"
   },
   testCaseId: {
     type: mongoose.SchemaTypes.ObjectId,
@@ -11,6 +12,12 @@ const submissionSchema = new mongoose.Schema({
   },
   userId: {
     type: mongoose.SchemaTypes.ObjectId,
+    required: true,
+    ref: "user"
+  },
+  language: {
+    type: String,
+    enum: ["C++", "Java", "Python"],
     required: true
   },
   code: {

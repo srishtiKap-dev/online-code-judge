@@ -28,6 +28,16 @@ function NavBar() {
           </a>
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12 text-white">
+          {isLoggedIn && (
+            <button
+              onClick={() => {
+                nav("/submissionHistory");
+              }}
+              className="text-sm font-semibold leading-6 text-white-900"
+            >
+              Submission History
+            </button>
+          )}
           {!isLoggedIn && (
             <a
               href="/signUp"
