@@ -119,7 +119,8 @@ app.post("/login", async (req, res) => {
     res.status(200).cookie("userId", token, options).json({
       message: "You have successfully logged In!",
       success: true,
-      token // optional
+      token,
+      isAdmin: user.isAdmin
     });
   } catch (error) {
     console.log("Error:" + error.message);

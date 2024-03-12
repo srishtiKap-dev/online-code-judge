@@ -17,6 +17,7 @@ function Login() {
       .then(res => {
         console.log(res);
         localStorage.setItem("jwtToken", res.data.token);
+        localStorage.setItem("isAdmin", res.data.isAdmin);
         nav("/home");
       })
       .catch(error => {

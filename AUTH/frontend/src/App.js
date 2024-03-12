@@ -6,6 +6,7 @@ import LandingPage from "./Pages/LandingPage.js";
 import HomePage from "./Pages/HomePage.js";
 import Description from "./Pages/Description.js";
 import SubmissionHistory from "./Pages/SubmissionHistory.js";
+import CreateQuestions from "./Pages/CreateQuestions.js";
 
 function App() {
   return (
@@ -24,6 +25,11 @@ function App() {
           exact
           path="/submissionHistory"
           element={<SubmissionHistory />}
+        ></Route>
+        <Route
+          exact
+          path="/createQuestions"
+          element={<CreateQuestions />}
         ></Route>
       </Routes>
     </div>

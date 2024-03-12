@@ -4,9 +4,15 @@ import { useNavigate } from "react-router-dom";
 function NavBar() {
   const nav = useNavigate();
   const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
     if (localStorage.getItem("jwtToken") != null) {
       setLoggedIn(true);
+    }
+    console.log("isAdmin is:", localStorage.getItem("isAdmin"));
+    if (localStorage.getItem("isAdmin")) {
+      console.log("isetting true");
+      setIsAdmin(true);
     }
   }, []);
 
@@ -28,6 +34,26 @@ function NavBar() {
           </a>
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12 text-white">
+          <button
+            onClick={() => {
+              nav("/home");
+            }}
+            className="text-sm font-semibold leading-6 text-white-900"
+          >
+            Home
+          </button>
+          {isAdmin && (
+            <button
+              onClick={() => {
+                nav("/createQuestions");
+              }}
+              className="text-sm font-semibold leading-6 text-white-900 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
+              data-ripple-light="true"
+              data-popover-target="menu"
+            >
+              Questions
+            </button>
+          )}
           {isLoggedIn && (
             <button
               onClick={() => {
@@ -51,6 +77,7 @@ function NavBar() {
               onClick={() => {
                 setLoggedIn(false);
                 localStorage.removeItem("jwtToken");
+                localStorage.removeItem("isAdmin");
                 nav("/");
               }}
               className="text-sm font-semibold leading-6 text-white-900"
