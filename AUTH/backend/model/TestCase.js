@@ -6,11 +6,11 @@ const testCaseSchema = new mongoose.Schema({
     required: true,
     ref: "question"
   },
-  input: {
+  inputFilePath: {
     type: String,
     required: true
   },
-  output: {
+  outputFilePath: {
     type: String,
     required: true
   }

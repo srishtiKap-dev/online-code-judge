@@ -35,6 +35,34 @@ function Description() {
     getQuestionDescription();
   }, []);
 
+  const setDefaultCode = async event => {
+    console.log(event);
+    if (event == "cpp") {
+      setCode(` // Include the input/output stream library
+      #include <iostream> 
+    
+      // Define the main function
+      int main() { 
+          // Output "Hello World!" to the console
+          std::cout << "Hello World!"; 
+          
+          // Return 0 to indicate successful execution
+          return 0; 
+      }`);
+    } else if (event == "java") {
+      setCode(`// Your First Program
+
+      class HelloWorld {
+          public static void main(String[] args) {
+              System.out.println("Hello, World!"); 
+          }
+      }`);
+    } else {
+      setCode(`# This program prints Hello World
+print('Hello, world!')
+            `);
+    }
+  };
   const getQuestionDescription = async event => {
     await axios
       .get(getDescriptionApi)
@@ -104,6 +132,7 @@ function Description() {
           <select
             onChange={e => {
               setLanguage(e.target.value);
+              setDefaultCode(e.target.value);
             }}
             className="select-box border border-gray-300 rounded-lg py-1.5 px-4 mb-2 focus:outline-none "
           >

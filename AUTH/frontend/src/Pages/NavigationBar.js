@@ -34,14 +34,16 @@ function NavBar() {
           </a>
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12 text-white">
-          <button
-            onClick={() => {
-              nav("/home");
-            }}
-            className="text-sm font-semibold leading-6 text-white-900"
-          >
-            Home
-          </button>
+          {isLoggedIn && (
+            <button
+              onClick={() => {
+                nav("/home");
+              }}
+              className="text-sm font-semibold leading-6 text-white-900"
+            >
+              Home
+            </button>
+          )}
           {isAdmin && (
             <button
               onClick={() => {

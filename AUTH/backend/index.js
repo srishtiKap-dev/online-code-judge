@@ -4,6 +4,7 @@ const { DBConnection } = require("./database/db");
 const { config } = require("dotenv");
 require("dotenv").config();
 const PORT = process.env.PORT || config.env.PORT;
+const FILE_UPLOAD_URL = process.env.FILE_UPLOAD_URL;
 const User = require("./model/User.js");
 const Question = require("./model/Question.js");
 const TestCase = require("./model/TestCase.js");
@@ -18,6 +19,8 @@ const { executeJava } = require("./compiler/executeJava.js");
 const { executePy } = require("./compiler/executePy.js");
 const { v4: uuid } = require("uuid"); // using v4 & alias name as uuid
 const Submission = require("./model/Submission.js");
+const multer = require("multer");
+const uploadFile = multer({ dest: "files/" });
 
 //middleware to allow nodejs to read data from frontend
 app.use(cors());
@@ -131,10 +134,24 @@ app.post("/login", async (req, res) => {
 app.post("/questions", async (req, res) => {
   try {
     // get all data from frontend
-    const { title, description, type, difficulty, input, output } = req.body;
+    const {
+      title,
+      description,
+      type,
+      difficulty,
+      inputFilePath,
+      outputFilePath
+    } = req.body;
 
     // check all data should be entered
-    if (!title || !description || !type || !difficulty || !input || !output) {
+    if (
+      !title ||
+      !description ||
+      !type ||
+      !difficulty ||
+      !inputFilePath ||
+      !outputFilePath
+    ) {
       return res.status(400).send("Please enter all the required details");
     }
 
@@ -148,8 +165,8 @@ app.post("/questions", async (req, res) => {
 
     const testcaseData = await TestCase.create({
       problemId: questionData._id,
-      input,
-      output
+      inputFilePath,
+      outputFilePath
     });
 
     // return response
@@ -332,6 +349,27 @@ app.get("/submissionHistory", async (req, res) => {
     res.status(200).json({
       message: "Fetched the submission history successfully!",
       submissionHistory
+    });
+  } catch (error) {
+    console.log("Error:" + error.message);
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+// upload input/output file
+app.post("/upload", uploadFile.single("file"), async (req, res) => {
+  try {
+    const fileObj = {
+      path: req.file.path,
+      name: req.file.originalname
+    };
+
+    const filePath = fileObj.path;
+    const fileName = fileObj.name;
+    res.status(200).json({
+      message: "File uploaded successfully",
+      path: filePath,
+      name: fileName
     });
   } catch (error) {
     console.log("Error:" + error.message);
