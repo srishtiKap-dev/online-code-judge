@@ -35,7 +35,6 @@ function CreateQuestions() {
               setOutputFilePath(res.data.path);
             }
             console.log(res);
-            setInputFilePath(res.data.path);
           })
           .catch(error => {
             console.log("Error occurred in Uploading input/output file", error);
@@ -126,7 +125,7 @@ function CreateQuestions() {
                 <option value="">Select Type</option>
                 <option value="string">String</option>
                 <option value="math">Math</option>
-                <option value="array">String</option>
+                <option value="array">Array</option>
               </select>
               <label
                 htmlFor="difficulty"

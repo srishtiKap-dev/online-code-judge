@@ -21,6 +21,8 @@ const { v4: uuid } = require("uuid"); // using v4 & alias name as uuid
 const Submission = require("./model/Submission.js");
 const multer = require("multer");
 const uploadFile = multer({ dest: "files/" });
+const path = require("path");
+const fs = require("fs");
 
 //middleware to allow nodejs to read data from frontend
 app.use(cors());
@@ -265,45 +267,69 @@ app.post("/submit", async (req, res) => {
 
     // shift : gets the object of 1st array
     testCase = testCase.filter(z => z.problemId != null).shift();
-    var testCaseInput = testCase.input;
-    var testCaseOutput = testCase.output;
+    console.log(testCase);
+    var inputTestCaseFilePath = path.join(__dirname, testCase.inputFilePath);
+    var outputTestCaseFilePath = path.join(__dirname, testCase.outputFilePath);
+    // var testCaseInput = testCase.input;
+    // var testCaseOutput = testCase.output;
 
     const randomUniqueId = uuid();
 
     //Create code file in codes folder
     const filePath = await generateFile(language, code, randomUniqueId);
 
-    //Create testcase input file in input folder
-    const inputPath = await generateInputFile(testCaseInput, randomUniqueId);
+    var testCasesInput = await fs.readFileSync(inputTestCaseFilePath, {
+      encoding: "utf8",
+      flag: "r"
+    });
+    testCasesInput = testCasesInput.split(/[\r\n]+/).filter(n => n);
+    console.log("splitting", testCasesInput);
 
-    //Run code and return output
-    var userOutput = "";
-    switch (language) {
-      case "cpp":
-        userOutput = await executeCpp(filePath, inputPath);
-        break;
-      case "java":
-        userOutput = await executeJava(filePath, inputPath);
-        break;
-      case "py":
-        userOutput = await executePy(filePath, inputPath);
-        break;
-    }
+    var testCasesOutput = await fs.readFileSync(outputTestCaseFilePath, {
+      encoding: "utf8",
+      flag: "r"
+    });
 
-    //Match db output with output from above step
-    var output = "";
-    userOutput = userOutput.trim();
-    var isSuccess = false;
-    if (userOutput === testCaseOutput) {
-      isSuccess = true;
-      output = "Code Submitted successfully.";
-    } else {
-      output = "Code Submission failed due to wrong answer.";
+    testCasesOutput = testCasesOutput.split(/[\r\n]+/).filter(n => n);
+    console.log("splitting", testCasesOutput);
+
+    var output = "Code submitted successfully!";
+    var isSuccess = true;
+    var failedAtTestCase = "0";
+
+    for (var i = 0; i < testCasesInput.length; i++) {
+      //Create testcase input file in input folder
+      const inputPath = await generateInputFile(
+        testCasesInput[i],
+        randomUniqueId
+      );
+
+      //Run code and return output
+      var userOutput = "";
+      switch (language) {
+        case "cpp":
+          userOutput = await executeCpp(filePath, inputPath);
+          break;
+        case "java":
+          userOutput = await executeJava(filePath, inputPath);
+          break;
+        case "py":
+          userOutput = await executePy(filePath, inputPath);
+          break;
+      }
+
+      //Match db output with output from above step
+      userOutput = userOutput.trim();
+      if (userOutput != testCasesOutput[i]) {
+        isSuccess = false;
+        output = `Failed at testcase ${i + 1}`;
+        failedAtTestCase = `${i + 1}`;
+        break;
+      }
     }
 
     // save submitted data in DB
     var problemId = testCase.problemId._id;
-    var testCaseId = testCase._id;
     var userData = jwt.verify(token, process.env.SECRET_KEY);
     var userId = userData.id;
     const timeStamp = new Date().toLocaleString("en-US", {
@@ -311,12 +337,10 @@ app.post("/submit", async (req, res) => {
     });
     var languageSelected =
       language == "cpp" ? "C++" : language == "java" ? "Java" : "Python";
-
-    console.log(language);
     var status = isSuccess ? "Passed" : "Failed";
     await Submission.create({
       problemId,
-      testCaseId,
+      failedAtTestCase,
       userId,
       language: languageSelected,
       code,

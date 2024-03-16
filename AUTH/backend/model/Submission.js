@@ -6,9 +6,8 @@ const submissionSchema = new mongoose.Schema({
     required: true,
     ref: "question"
   },
-  testCaseId: {
-    type: mongoose.SchemaTypes.ObjectId,
-    required: true
+  failedAtTestCase: {
+    type: Number
   },
   userId: {
     type: mongoose.SchemaTypes.ObjectId,

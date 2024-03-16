@@ -132,6 +132,7 @@ print('Hello, world!')
           <select
             onChange={e => {
               setLanguage(e.target.value);
+              setOutput("");
               setDefaultCode(e.target.value);
             }}
             className="select-box border border-gray-300 rounded-lg py-1.5 px-4 mb-2 focus:outline-none "
