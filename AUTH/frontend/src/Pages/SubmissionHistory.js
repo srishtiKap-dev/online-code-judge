@@ -61,7 +61,14 @@ function SubmissionHistory() {
                   <td className="px-6 py-4">{submission.problemId.title}</td>
                   <td className="px-6 py-4">{submission.language}</td>
                   <td className="px-6 py-4">{submission.submittedAt}</td>
-                  <td className="px-6 py-4">{submission.status}</td>
+                  {submission.status == "Passed" && (
+                    <td className="px-6 py-4">{submission.status}</td>
+                  )}
+                  {submission.status == "Failed" && (
+                    <td className="px-6 py-4 text-red-600">
+                      Failed at testcase {submission.failedAtTestCase}
+                    </td>
+                  )}
                 </tr>
               );
             })}

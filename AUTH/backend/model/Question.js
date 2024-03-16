@@ -14,10 +14,16 @@ const questionSchema = new mongoose.Schema({
     required: true
   },
   difficulty: {
-    type: String
+    type: String,
+    required: true
   },
-  input: {
-    type: String
+  sampleInput: {
+    type: String,
+    required: true
+  },
+  sampleOutput: {
+    type: String,
+    required: true
   }
 });
 

@@ -141,6 +141,8 @@ app.post("/questions", async (req, res) => {
       description,
       type,
       difficulty,
+      sampleInput,
+      sampleOutput,
       inputFilePath,
       outputFilePath
     } = req.body;
@@ -151,6 +153,8 @@ app.post("/questions", async (req, res) => {
       !description ||
       !type ||
       !difficulty ||
+      !sampleInput ||
+      !sampleOutput ||
       !inputFilePath ||
       !outputFilePath
     ) {
@@ -162,7 +166,9 @@ app.post("/questions", async (req, res) => {
       title,
       description,
       type,
-      difficulty
+      difficulty,
+      sampleInput,
+      sampleOutput
     });
 
     const testcaseData = await TestCase.create({
@@ -370,6 +376,7 @@ app.get("/submissionHistory", async (req, res) => {
         path: "userId"
       });
 
+    console.log(submissionHistory);
     res.status(200).json({
       message: "Fetched the submission history successfully!",
       submissionHistory

@@ -1,6 +1,6 @@
 import NavBar from "./NavigationBar";
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-clike";
@@ -8,7 +8,6 @@ import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
 import axios from "axios";
 function Description() {
-  const nav = useNavigate();
   const [input, setinput] = useState();
   const [language, setLanguage] = useState("cpp");
   const [code, setCode] = useState(`
@@ -25,6 +24,8 @@ function Description() {
   }`);
   const [output, setOutput] = useState("");
   const [questionDesc, setQuestionDesc] = useState([]);
+  const [sampleInput, setSampleInput] = useState();
+  const [sampleOutput, setSampleOutput] = useState();
   let { title } = useParams();
   const getDescriptionApi = `http://localhost:8080/question/description/${title}`;
   const runApi = "http://localhost:8080/run";
@@ -68,6 +69,8 @@ print('Hello, world!')
       .get(getDescriptionApi)
       .then(res => {
         setQuestionDesc(res.data.questionDesc[0].description);
+        setSampleInput(res.data.questionDesc[0].sampleInput);
+        setSampleOutput(res.data.questionDesc[0].sampleOutput);
         console.log("Here::", questionDesc);
       })
       .catch(error => {
@@ -106,24 +109,42 @@ print('Hello, world!')
       });
   };
   return (
-    <div>
+    <div className="bg-white border-b dark:bg-gray-800 h-screen text-sm text-white uppercase bg-gray-50 dark:bg-gray-700 dark:text-white">
       <NavBar />
       <div className="grid grid-cols-2 text-left m-8 font-mono">
         <div className="leading-10">
-          <div className="decoration-solid underline text-2xl font-bold">
+          <div className="decoration-solid underline text-2xl">
             <h5>{title}</h5>
           </div>
 
           {questionDesc}
-          <div class="mt-60">
-            <label>Input</label>
+          <div className="mt-4">
+            <label>Sample Input</label>
+            <br></br>
+            <textarea
+              value={sampleInput}
+              class="min-h-[50px] w-9/12 rounded-[7px] border border-white-600 px-3 py-2.5 font-sans text-sm font-normal focus:border-1 focus:border-white-900 focus:outline-0 bg-gray-800 dark:bg-gray-700 dark:text-white border-b dark:bg-gray-800"
+              placeholder=" "
+            ></textarea>
+          </div>
+          <div className="mt-4">
+            <label>Sample Output</label>
+            <br></br>
+            <textarea
+              value={sampleOutput}
+              class="min-h-[50px] w-9/12 rounded-[7px] border border-white-600 px-3 py-2.5 font-sans text-sm font-normal focus:border-1 focus:border-white-900 focus:outline-0 bg-gray-800 dark:bg-gray-700 dark:text-white border-b dark:bg-gray-800"
+              placeholder=" "
+            ></textarea>
+          </div>
+          <div className="mt-4">
+            <label>Custom Input</label>
             <br></br>
             <textarea
               value={input}
               onChange={e => {
                 setinput(e.target.value);
               }}
-              class="min-h-[100px] w-9/12 resize-none rounded-[7px] border border-black-600 px-3 py-2.5 font-sans text-sm font-normal focus:border-1 focus:border-gray-900 focus:outline-0"
+              class="min-h-[100px] w-9/12 resize-none rounded-[7px] border border-white-600 px-3 py-2.5 font-sans text-sm font-normal focus:border-1 focus:border-white-900 focus:outline-0 bg-gray-800 dark:bg-gray-700 dark:text-white border-b dark:bg-gray-800"
               placeholder=" "
             ></textarea>
           </div>
@@ -135,12 +156,24 @@ print('Hello, world!')
               setOutput("");
               setDefaultCode(e.target.value);
             }}
-            className="select-box border border-gray-300 rounded-lg py-1.5 px-4 mb-2 focus:outline-none "
+            className="select-box border border-gray-300 rounded-lg py-1.5 px-4 mb-2 focus:outline-none border-b dark:bg-gray-800"
           >
             <option value="cpp">C++</option>
             <option value="py">Python</option>
             <option value="java">Java</option>
           </select>
+          <button
+            onClick={handleRun}
+            class="ml-4 bg-blue-500 text-black py-2 px-4 rounded-lg border border-blue-300 py-1.5 px-4"
+          >
+            Run
+          </button>
+          <button
+            onClick={handleSubmit}
+            class=" mx-4 bg-blue-500 text-black py-2 px-4 rounded-lg border border-blue-300 py-1.5 px-4"
+          >
+            Submit
+          </button>
           <Editor
             value={code}
             onValueChange={code => setCode(code)}
@@ -151,39 +184,21 @@ print('Hello, world!')
               fontSize: 12,
               outline: "none",
               border: "none",
-              backgroundColor: "#EADDCA",
-              height: "100%",
+              backgroundColor: "#cfd4b4",
+              height: "80%",
               overflowY: "scroll"
             }}
           />
-          <button
-            onClick={handleRun}
-            class="bg-white-500 text-black py-2 px-4 rounded-lg border border-gray-300 py-1.5 px-4 mt-2"
-          >
-            Run
-          </button>
-          <button
-            onClick={handleSubmit}
-            class=" mx-4 bg-blue-500 text-black py-2 px-4 rounded-lg border border-blue-300 py-1.5 px-4 mt-2"
-          >
-            Submit
-          </button>
-          <br></br>
-          {output && (
-            <div className="mt-8">
-              Output:
-              <div className="outputbox mt-4 bg-gray-100 rounded-md shadow-md p-4">
-                <p
-                  style={{
-                    fontFamily: '"Fira code", "Fira Mono", monospace',
-                    fontSize: 12
-                  }}
-                >
+          <div>
+            {output && (
+              <div className="mt-6">
+                Output:
+                <div className="mt-4 bg-gray-100 text-black rounded-md shadow-md p-3 text-sm">
                   {output}
-                </p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
