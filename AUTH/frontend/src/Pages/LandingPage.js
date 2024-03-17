@@ -3,7 +3,7 @@ function LandingPage() {
   return (
     <div>
       <NavBar />
-      <div className="bg-neutral-300 h-screen">
+      <div className="bg-blue-100 h-screen">
         <body className="text-5xl font-bold">
           <br></br>
           <br></br>
@@ -13,7 +13,7 @@ function LandingPage() {
           <h2 className="text-green-700 text-5xl font-bold">to</h2>
           <br></br>
           <h2 className="text-green-700 text-5xl font-bold">
-            Online Code Judge
+            Code Judge Platform
           </h2>
         </body>
       </div>

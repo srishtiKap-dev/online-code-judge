@@ -1,10 +1,11 @@
 import NavBar from "./NavigationBar";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import dateFormat from "../util.js";
 
 function SubmissionHistory() {
   const [submissionHistoryList, setSubmissionHistoryList] = useState([]);
-  const url = "http://localhost:8080/submissionHistory";
+  const apiUrl = process.env.REACT_APP_API_URL;
   // to load questions by default
   useEffect(() => {
     getSubmissionHistory();
@@ -12,7 +13,7 @@ function SubmissionHistory() {
 
   const getSubmissionHistory = async event => {
     await axios
-      .get(url)
+      .get(`${apiUrl}/submissionHistory`)
       .then(res => {
         setSubmissionHistoryList(res.data.submissionHistory);
         console.log("Submission list", res.data.submissionHistory);
@@ -60,7 +61,9 @@ function SubmissionHistory() {
                   </th>
                   <td className="px-6 py-4">{submission.problemId.title}</td>
                   <td className="px-6 py-4">{submission.language}</td>
-                  <td className="px-6 py-4">{submission.submittedAt}</td>
+                  <td className="px-6 py-4">
+                    {dateFormat(submission.submittedAt)}
+                  </td>
                   {submission.status == "Passed" && (
                     <td className="px-6 py-4">{submission.status}</td>
                   )}

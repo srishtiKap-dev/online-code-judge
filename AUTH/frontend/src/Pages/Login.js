@@ -1,23 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Login() {
-  const url = "http://localhost:8080/login";
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const nav = useNavigate();
+  //let { isRegistered } = useParams();
+  //console.log(isRegistered);
+  const queryParams = new URLSearchParams(window.location.search);
+  const isRegistered = queryParams.get("isRegistered");
+
+  useEffect(() => {
+    console.log("isRegis:", isRegistered);
+    if (isRegistered) {
+      toast.success(`User registered successfully. Please login!`, {
+        duration: 10000
+      });
+    }
+  }, [isRegistered]);
 
   const handleSubmit = async event => {
     event.preventDefault();
     const request = { email, password };
     await axios
-      .post(url, request)
+      .post(`${apiUrl}/login`, request)
       .then(res => {
         console.log(res);
         localStorage.setItem("jwtToken", res.data.token);
         localStorage.setItem("isAdmin", res.data.isAdmin);
+        localStorage.setItem("firstname", res.data.firstname);
+        localStorage.setItem("lastname", res.data.lastname);
         nav("/home");
       })
       .catch(error => {

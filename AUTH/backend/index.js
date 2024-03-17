@@ -123,7 +123,9 @@ app.post("/login", async (req, res) => {
       message: "You have successfully logged In!",
       success: true,
       token,
-      isAdmin: user.isAdmin
+      isAdmin: user.isAdmin,
+      firstname: user.firstname,
+      lastname: user.lastname
     });
   } catch (error) {
     console.log("Error:" + error.message);

@@ -108,7 +108,7 @@ print('Hello, world!')
       });
   };
   return (
-    <div className="bg-white border-b dark:bg-gray-800 h-screen text-sm text-white uppercase bg-gray-50 dark:bg-gray-700 dark:text-white">
+    <div className="bg-white border-b dark:bg-gray-800 h-screen text-sm text-white bg-gray-50 dark:bg-gray-700 dark:text-white">
       <NavBar />
       <div className="grid grid-cols-2 text-left m-8 font-mono">
         <div className="leading-10">
@@ -190,9 +190,9 @@ print('Hello, world!')
           />
           <div>
             {output && (
-              <div className="mt-6">
+              <div className="mt-4">
                 Output:
-                <div className="mt-4 bg-gray-100 text-black rounded-md shadow-md p-3 text-sm">
+                <div className="bg-gray-100 text-black rounded-md shadow-md p-3 text-sm">
                   {output}
                 </div>
               </div>

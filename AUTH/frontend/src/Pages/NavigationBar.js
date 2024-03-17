@@ -5,12 +5,17 @@ function NavBar() {
   const nav = useNavigate();
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [firstname, setFirstname] = useState(false);
+  const [lastname, setLastname] = useState(false);
   useEffect(() => {
     if (localStorage.getItem("jwtToken") != null) {
       setLoggedIn(true);
+      setFirstname(localStorage.getItem("firstname"));
+      setLastname(localStorage.getItem("lastname"));
+      console.log("lastname:", lastname);
+      console.log("firstname", firstname);
     }
-    console.log("isAdmin is:", localStorage.getItem("isAdmin"));
-    if (localStorage.getItem("isAdmin")) {
+    if (localStorage.getItem("isAdmin") == "true") {
       console.log("isetting true");
       setIsAdmin(true);
     }
@@ -19,10 +24,10 @@ function NavBar() {
   return (
     <header className="bg-black">
       <nav
-        className="mx-auto flex max-w-7xl items-start justify-between p-6 lg:px-8"
+        className="mx-auto flex items-start justify-between p-6 lg:px-8"
         aria-label="Global"
       >
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12 text-white">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-start lg:gap-x-12 text-white">
           {isLoggedIn && (
             <button
               onClick={() => {
@@ -55,6 +60,8 @@ function NavBar() {
               Submission History
             </button>
           )}
+        </div>
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12 text-white">
           {!isLoggedIn && (
             <a
               href="/signUp"
@@ -62,6 +69,11 @@ function NavBar() {
             >
               Sign up
             </a>
+          )}
+          {isLoggedIn && (
+            <div className="text-sm font-semibold leading-6 text-white-900">
+              {firstname} {lastname}
+            </div>
           )}
           {isLoggedIn ? (
             <button
