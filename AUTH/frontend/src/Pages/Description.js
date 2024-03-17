@@ -27,9 +27,7 @@ function Description() {
   const [sampleInput, setSampleInput] = useState();
   const [sampleOutput, setSampleOutput] = useState();
   let { title } = useParams();
-  const getDescriptionApi = `http://localhost:8080/question/description/${title}`;
-  const runApi = "http://localhost:8080/run";
-  const submitApi = "http://localhost:8080/submit";
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   // to load description page by default
   useEffect(() => {
@@ -66,8 +64,9 @@ print('Hello, world!')
   };
   const getQuestionDescription = async event => {
     await axios
-      .get(getDescriptionApi)
+      .get(`${apiUrl}/question/description/${title}`)
       .then(res => {
+        console.log(res);
         setQuestionDesc(res.data.questionDesc[0].description);
         setSampleInput(res.data.questionDesc[0].sampleInput);
         setSampleOutput(res.data.questionDesc[0].sampleOutput);
@@ -81,7 +80,7 @@ print('Hello, world!')
   const handleRun = async event => {
     const req = { language, code, input };
     await axios
-      .post(runApi, req)
+      .post(`${apiUrl}/run`, req)
       .then(res => {
         setOutput(res.data.output);
       })
@@ -97,7 +96,7 @@ print('Hello, world!')
     var token = localStorage.getItem("jwtToken");
     const req = { title, language, code, token };
     await axios
-      .post(submitApi, req)
+      .post(`${apiUrl}/submit`, req)
       .then(res => {
         setOutput(res.data.output);
       })

@@ -4,13 +4,11 @@ const { DBConnection } = require("./database/db");
 const { config } = require("dotenv");
 require("dotenv").config();
 const PORT = process.env.PORT || config.env.PORT;
-const FILE_UPLOAD_URL = process.env.FILE_UPLOAD_URL;
 const User = require("./model/User.js");
 const Question = require("./model/Question.js");
 const TestCase = require("./model/TestCase.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { generateFile } = require("./compiler/generateFile.js");
 const { generateInputFile } = require("./compiler/generateInputFile.js");
@@ -276,8 +274,6 @@ app.post("/submit", async (req, res) => {
     console.log(testCase);
     var inputTestCaseFilePath = path.join(__dirname, testCase.inputFilePath);
     var outputTestCaseFilePath = path.join(__dirname, testCase.outputFilePath);
-    // var testCaseInput = testCase.input;
-    // var testCaseOutput = testCase.output;
 
     const randomUniqueId = uuid();
 
