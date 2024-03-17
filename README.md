@@ -57,6 +57,14 @@ Follow these steps to set up and run the project locally:
 6. Start the frontend development server: `cd frontend && yarn start`
 7. Access the application in your browser at `http://localhost:3000`
 
+## Platform Look
+
+![Screenshot 2024-03-17 at 8 52 32 PM](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/dc685df3-4cb1-4079-b359-27e5ed45585d)
+![Screenshot 2024-03-17 at 8 55 23 PM](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/78ba5671-10ac-49de-a4dd-62780b7f046d)
+![Screenshot 2024-03-17 at 8 56 50 PM](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/a3254114-d8fd-4ca8-a545-96d78d3a7233)
+![Screenshot 2024-03-17 at 8 56 36 PM](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/c695b337-8755-434b-9d0b-e281326380a8)
+
+
 ## Acknowledgements
 
 - Special thanks to Mentors at AlgoU for inspiration and reference.
