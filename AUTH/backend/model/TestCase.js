@@ -4,13 +4,13 @@ const testCaseSchema = new mongoose.Schema({
   problemId: {
     type: mongoose.SchemaTypes.ObjectId,
     required: true,
-    ref: "Question"
+    ref: "question"
   },
-  input: {
+  inputFilePath: {
     type: String,
     required: true
   },
-  output: {
+  outputFilePath: {
     type: String,
     required: true
   }

@@ -9,12 +9,18 @@ const Question = require("./model/Question.js");
 const TestCase = require("./model/TestCase.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { generateFile } = require("./compiler/generateFile.js");
+const { generateInputFile } = require("./compiler/generateInputFile.js");
 const { executeCpp } = require("./compiler/executeCpp.js");
 const { executeJava } = require("./compiler/executeJava.js");
 const { executePy } = require("./compiler/executePy.js");
+const { v4: uuid } = require("uuid"); // using v4 & alias name as uuid
+const Submission = require("./model/Submission.js");
+const multer = require("multer");
+const uploadFile = multer({ dest: "files/" });
+const path = require("path");
+const fs = require("fs");
 
 //middleware to allow nodejs to read data from frontend
 app.use(cors());
@@ -113,10 +119,13 @@ app.post("/login", async (req, res) => {
     };
 
     // send the token
-    res.status(200).cookie("token", token, options).json({
+    res.status(200).cookie("userId", token, options).json({
       message: "You have successfully logged In!",
       success: true,
-      token // optional
+      token,
+      isAdmin: user.isAdmin,
+      firstname: user.firstname,
+      lastname: user.lastname
     });
   } catch (error) {
     console.log("Error:" + error.message);
@@ -127,10 +136,28 @@ app.post("/login", async (req, res) => {
 app.post("/questions", async (req, res) => {
   try {
     // get all data from frontend
-    const { title, description, type, difficulty, input, output } = req.body;
+    const {
+      title,
+      description,
+      type,
+      difficulty,
+      sampleInput,
+      sampleOutput,
+      inputFilePath,
+      outputFilePath
+    } = req.body;
 
     // check all data should be entered
-    if (!title || !description || !type || !difficulty || !input || !output) {
+    if (
+      !title ||
+      !description ||
+      !type ||
+      !difficulty ||
+      !sampleInput ||
+      !sampleOutput ||
+      !inputFilePath ||
+      !outputFilePath
+    ) {
       return res.status(400).send("Please enter all the required details");
     }
 
@@ -139,13 +166,15 @@ app.post("/questions", async (req, res) => {
       title,
       description,
       type,
-      difficulty
+      difficulty,
+      sampleInput,
+      sampleOutput
     });
 
     const testcaseData = await TestCase.create({
       problemId: questionData._id,
-      input,
-      output
+      inputFilePath,
+      outputFilePath
     });
 
     // return response
@@ -190,6 +219,10 @@ app.get("/question/description/:title", async (req, res) => {
 // run/compile code
 app.post("/run", async (req, res) => {
   const { language, code } = req.body;
+  var input = req.body.input;
+  if (!input) {
+    input = "";
+  }
   if (!language) {
     return res.status(400).json({ message: "Please select language!" });
   }
@@ -198,23 +231,176 @@ app.post("/run", async (req, res) => {
   }
 
   try {
-    const filePath = await generateFile(language, code);
+    const randomUniqueId = uuid();
+    const filePath = await generateFile(language, code, randomUniqueId);
+    const inputPath = await generateInputFile(input, randomUniqueId);
     var output = "";
     switch (language) {
       case "cpp":
-        output = await executeCpp(filePath);
+        output = await executeCpp(filePath, inputPath);
         break;
       case "java":
-        output = await executeJava(filePath);
+        output = await executeJava(filePath, inputPath);
         break;
       case "py":
-        output = await executePy(filePath);
+        output = await executePy(filePath, inputPath);
         break;
     }
 
-    res.json({ filePath, output });
+    res.json({ filePath, output, inputPath });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// submit code
+app.post("/submit", async (req, res) => {
+  try {
+    const { title, language, code, token } = req.body;
+
+    if (!language) {
+      return res.status(400).json({ message: "Please select language!" });
+    }
+    if (!code) {
+      return res.status(400).json({ success: false, error: "Empty code body" });
+    }
+
+    //Get testcase array from DB based on problem title
+    var testCase = await TestCase.find().populate({
+      path: "problemId",
+      match: { title: title }
+    });
+
+    // shift : gets the object of 1st array
+    testCase = testCase.filter(z => z.problemId != null).shift();
+    console.log(testCase);
+    var inputTestCaseFilePath = path.join(__dirname, testCase.inputFilePath);
+    var outputTestCaseFilePath = path.join(__dirname, testCase.outputFilePath);
+
+    const randomUniqueId = uuid();
+
+    //Create code file in codes folder
+    const filePath = await generateFile(language, code, randomUniqueId);
+
+    var testCasesInput = await fs.readFileSync(inputTestCaseFilePath, {
+      encoding: "utf8",
+      flag: "r"
+    });
+    testCasesInput = testCasesInput.split(/[\r\n]+/).filter(n => n);
+    console.log("splitting", testCasesInput);
+
+    var testCasesOutput = await fs.readFileSync(outputTestCaseFilePath, {
+      encoding: "utf8",
+      flag: "r"
+    });
+
+    testCasesOutput = testCasesOutput.split(/[\r\n]+/).filter(n => n);
+    console.log("splitting", testCasesOutput);
+
+    var output = "Code submitted successfully!";
+    var isSuccess = true;
+    var failedAtTestCase = "0";
+
+    for (var i = 0; i < testCasesInput.length; i++) {
+      //Create testcase input file in input folder
+      const inputPath = await generateInputFile(
+        testCasesInput[i],
+        randomUniqueId
+      );
+
+      //Run code and return output
+      var userOutput = "";
+      switch (language) {
+        case "cpp":
+          userOutput = await executeCpp(filePath, inputPath);
+          break;
+        case "java":
+          userOutput = await executeJava(filePath, inputPath);
+          break;
+        case "py":
+          userOutput = await executePy(filePath, inputPath);
+          break;
+      }
+
+      //Match db output with output from above step
+      userOutput = userOutput.trim();
+      if (userOutput != testCasesOutput[i]) {
+        isSuccess = false;
+        output = `Failed at testcase ${i + 1}`;
+        failedAtTestCase = `${i + 1}`;
+        break;
+      }
+    }
+
+    // save submitted data in DB
+    var problemId = testCase.problemId._id;
+    var userData = jwt.verify(token, process.env.SECRET_KEY);
+    var userId = userData.id;
+    var timeStamp = new Date();
+    var languageSelected =
+      language == "cpp" ? "C++" : language == "java" ? "Java" : "Python";
+    var status = isSuccess ? "Passed" : "Failed";
+    await Submission.create({
+      problemId,
+      failedAtTestCase,
+      userId,
+      language: languageSelected,
+      code,
+      timeStamp,
+      status
+    });
+
+    res.json({ output });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// get submission History
+app.get("/submissionHistory", async (req, res) => {
+  try {
+    var submissionHistory = await Submission.find(
+      {},
+      { _id: 0, testCaseId: 0, code: 0 },
+      { sort: { submittedAt: -1 } }
+    )
+
+      .populate({
+        path: "problemId"
+      })
+      .populate({
+        path: "userId"
+      });
+
+    console.log(submissionHistory);
+    res.status(200).json({
+      message: "Fetched the submission history successfully!",
+      submissionHistory
+    });
+  } catch (error) {
+    console.log("Error:" + error.message);
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+// upload input/output file
+app.post("/upload", uploadFile.single("file"), async (req, res) => {
+  try {
+    const fileObj = {
+      path: req.file.path,
+      name: req.file.originalname
+    };
+
+    const filePath = fileObj.path;
+    const fileName = fileObj.name;
+    res.status(200).json({
+      message: "File uploaded successfully",
+      path: filePath,
+      name: fileName
+    });
+  } catch (error) {
+    console.log("Error:" + error.message);
+    return res.status(500).json({ message: error.message });
   }
 });
 

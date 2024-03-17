@@ -1,24 +1,24 @@
 import { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
-  const url = "http://localhost:8080/register";
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const nav = useNavigate();
 
   const handleSubmit = async event => {
     event.preventDefault();
     const request = { firstname, lastname, email, password };
     await axios
-      .post(url, request)
+      .post(`${apiUrl}/register`, request)
       .then(res => {
         console.log(res);
-        toast.success(res.data.message, {
-          duration: 10000
-        });
+        nav("/login?isRegistered=true");
       })
       .catch(error => {
         console.log("Error occurred in Register API", error);

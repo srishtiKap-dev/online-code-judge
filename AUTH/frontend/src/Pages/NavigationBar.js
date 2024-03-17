@@ -1,39 +1,86 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function NavBar() {
   const nav = useNavigate();
   const [isLoggedIn, setLoggedIn] = useState(false);
-  console.log(isLoggedIn);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [firstname, setFirstname] = useState(false);
+  const [lastname, setLastname] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem("jwtToken") != null) {
+      setLoggedIn(true);
+      setFirstname(localStorage.getItem("firstname"));
+      setLastname(localStorage.getItem("lastname"));
+      console.log("lastname:", lastname);
+      console.log("firstname", firstname);
+    }
+    if (localStorage.getItem("isAdmin") == "true") {
+      console.log("isetting true");
+      setIsAdmin(true);
+    }
+  }, []);
 
   return (
     <header className="bg-black">
       <nav
-        className="mx-auto flex max-w-7xl items-start justify-between p-6 lg:px-8"
+        className="mx-auto flex items-start justify-between p-6 lg:px-8"
         aria-label="Global"
       >
-        {/* Platform Logo */}
-        <div className="flex lg:flex-1">
-          <a className="-m-1.5 p-1.5">
-            <span className="sr-only">Your Company</span>
-            <img
-              className="h-8 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt=""
-            />
-          </a>
+        <div className="hidden lg:flex lg:flex-1 lg:justify-start lg:gap-x-12 text-white">
+          {isLoggedIn && (
+            <button
+              onClick={() => {
+                nav("/home");
+              }}
+              className="text-sm font-semibold leading-6 text-white-900"
+            >
+              Home
+            </button>
+          )}
+          {isAdmin && (
+            <button
+              onClick={() => {
+                nav("/createQuestions");
+              }}
+              className="text-sm font-semibold leading-6 text-white-900 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
+              data-ripple-light="true"
+              data-popover-target="menu"
+            >
+              Create Questions
+            </button>
+          )}
+          {isLoggedIn && (
+            <button
+              onClick={() => {
+                nav("/submissionHistory");
+              }}
+              className="text-sm font-semibold leading-6 text-white-900"
+            >
+              Submission History
+            </button>
+          )}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-12 text-white">
-          <a
-            href="/signUp"
-            className="text-sm font-semibold leading-6 text-white-900"
-          >
-            Sign up
-          </a>
+          {!isLoggedIn && (
+            <a
+              href="/signUp"
+              className="text-sm font-semibold leading-6 text-white-900"
+            >
+              Sign up
+            </a>
+          )}
+          {isLoggedIn && (
+            <div className="text-sm font-semibold leading-6 text-white-900">
+              {firstname} {lastname}
+            </div>
+          )}
           {isLoggedIn ? (
             <button
               onClick={() => {
                 setLoggedIn(false);
+                localStorage.removeItem("jwtToken");
+                localStorage.removeItem("isAdmin");
                 nav("/");
               }}
               className="text-sm font-semibold leading-6 text-white-900"

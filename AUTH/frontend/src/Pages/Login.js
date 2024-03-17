@@ -1,21 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Login() {
-  const url = "http://localhost:8080/login";
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const nav = useNavigate();
+  //let { isRegistered } = useParams();
+  //console.log(isRegistered);
+  const queryParams = new URLSearchParams(window.location.search);
+  const isRegistered = queryParams.get("isRegistered");
+
+  useEffect(() => {
+    console.log("isRegis:", isRegistered);
+    if (isRegistered) {
+      toast.success(`User registered successfully. Please login!`, {
+        duration: 10000
+      });
+    }
+  }, [isRegistered]);
 
   const handleSubmit = async event => {
     event.preventDefault();
     const request = { email, password };
     await axios
-      .post(url, request)
+      .post(`${apiUrl}/login`, request)
       .then(res => {
         console.log(res);
+        localStorage.setItem("jwtToken", res.data.token);
+        localStorage.setItem("isAdmin", res.data.isAdmin);
+        localStorage.setItem("firstname", res.data.firstname);
+        localStorage.setItem("lastname", res.data.lastname);
         nav("/home");
       })
       .catch(error => {
@@ -29,11 +46,6 @@ function Login() {
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-          className="mx-auto h-10 w-auto"
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-          alt="Your Company"
-        />
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Login to your Account
         </h2>

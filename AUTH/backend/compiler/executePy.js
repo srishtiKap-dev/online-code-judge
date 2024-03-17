@@ -6,13 +6,9 @@ const { exec } = require("node:child_process");
 if (!fs.existsSync(outputDirectory)) {
   fs.mkdirSync(outputDirectory, { recursive: true });
 }
-const executePy = async filePath => {
-  const randomUniqueString = path.basename(filePath).split(".")[0];
-  const outFile = randomUniqueString + ".class";
-  const outputPath = path.join(outputDirectory, outFile);
-
+const executePy = async (filePath, inputPath) => {
   return new Promise((resolve, reject) => {
-    exec(`Python3 ${filePath}`, (error, stdout, stderr) => {
+    exec(`python3 ${filePath} < ${inputPath}`, (error, stdout, stderr) => {
       if (error) {
         reject(error);
       }

@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const { v4: uuid } = require("uuid"); // using v4 & alias name as uuid
 
 //Algo-online-judge/AUTH/backend/compiler/codes : create codes directory
 const codeDirectory = path.join(__dirname, "codes");
@@ -26,8 +25,7 @@ if (!fs.existsSync(pyDirectory)) {
   fs.mkdirSync(pyDirectory, { recursive: true });
 }
 
-const generateFile = async (fileExtension, code) => {
-  const randomUniqueId = uuid();
+const generateFile = async (fileExtension, code, randomUniqueId) => {
   const fileName = randomUniqueId + "." + fileExtension;
   var filePath = "";
   switch (fileExtension) {

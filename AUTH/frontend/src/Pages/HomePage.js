@@ -5,7 +5,7 @@ import axios from "axios";
 function HomePage() {
   const nav = useNavigate();
   const [questionList, setQuestionList] = useState([]);
-  const url = "http://localhost:8080/questions";
+  const apiUrl = process.env.REACT_APP_API_URL;
   let { title } = useParams();
 
   // to load questions by default
@@ -15,7 +15,7 @@ function HomePage() {
 
   const getQuestionsList = async event => {
     await axios
-      .get(url)
+      .get(`${apiUrl}/questions`)
       .then(res => {
         setQuestionList(res.data.questionList);
         console.log("Here", questionList);
@@ -26,7 +26,6 @@ function HomePage() {
   };
 
   const getProblemDescription = async question => {
-    console.log(question.title);
     title = question.title;
     nav("/description/" + title);
   };
@@ -34,7 +33,7 @@ function HomePage() {
   return (
     <div>
       <NavBar />
-      <div className="relative overflow-x-auto">
+      <div className="relative overflow-x-auto h-screen bg-white border-b dark:bg-gray-800">
         <table className="mx-auto w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -59,7 +58,7 @@ function HomePage() {
                 >
                   <th
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    className="px-6 py-4 font-medium text-gray-900 dark:text-white"
                   >
                     {question.title}
                   </th>
