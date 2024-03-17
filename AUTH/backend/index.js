@@ -336,9 +336,7 @@ app.post("/submit", async (req, res) => {
     var problemId = testCase.problemId._id;
     var userData = jwt.verify(token, process.env.SECRET_KEY);
     var userId = userData.id;
-    const timeStamp = new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Calcutta"
-    });
+    var timeStamp = new Date();
     var languageSelected =
       language == "cpp" ? "C++" : language == "java" ? "Java" : "Python";
     var status = isSuccess ? "Passed" : "Failed";
