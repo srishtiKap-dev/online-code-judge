@@ -22,7 +22,6 @@ function CreateQuestions() {
 
   useEffect(() => {
     const getFile = async event => {
-      console.log(fileType);
       if (file) {
         const data = new FormData();
         data.append("name", file.name);
@@ -37,7 +36,6 @@ function CreateQuestions() {
               setOutputFileStatus("Output file uploaded successfully!");
               setOutputFilePath(res.data.path);
             }
-            console.log(res);
           })
           .catch(error => {
             console.log("Error occurred in Uploading input/output file", error);
@@ -75,7 +73,6 @@ function CreateQuestions() {
     await axios
       .post(`${apiUrl}/questions`, req)
       .then(res => {
-        console.log(res);
         toast.success(res.data.message, {
           duration: 10000
         });
@@ -135,7 +132,7 @@ function CreateQuestions() {
               </label>
               <select
                 onChange={e => setType(e.target.value)}
-                class="ml-4 w-2/4 peer rounded-[7px] border bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-white-900 focus:outline-0 bg-gray-700"
+                className="ml-4 w-2/4 peer rounded-[7px] border bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-white-900 focus:outline-0 bg-gray-700"
               >
                 <option value="">Select Type</option>
                 <option value="String">String</option>
@@ -150,7 +147,7 @@ function CreateQuestions() {
               </label>
               <select
                 onChange={e => setDifficulty(e.target.value)}
-                class="ml-4 peer w-2/4 rounded-[7px] border bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-white-900 focus:outline-0 bg-gray-700"
+                className="ml-4 peer w-2/4 rounded-[7px] border bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-white-900 focus:outline-0 bg-gray-700"
               >
                 <option value="">Select Difficulty</option>
                 <option value="Easy">Easy</option>

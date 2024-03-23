@@ -404,6 +404,33 @@ app.post("/upload", uploadFile.single("file"), async (req, res) => {
   }
 });
 
+// delete question
+app.post("/delete/:title", async (req, res) => {
+  try {
+    var title = req.params.title;
+    if (!title) {
+      console.log("Please provide question title!");
+      return res
+        .status(400)
+        .json({ message: "Please provide question title!" });
+    }
+    const questionData = await Question.findOneAndDelete({ title });
+    const questionId = questionData._id;
+    const testcaseData = await TestCase.findOneAndDelete({
+      problemId: questionId
+    });
+    const submissionData = await Submission.deleteMany({
+      problemId: questionId
+    });
+    res.status(200).json({
+      message: "Question deleted successfully"
+    });
+  } catch (error) {
+    console.log("Error:" + error.message);
+    return res.status(500).json({ message: error.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });

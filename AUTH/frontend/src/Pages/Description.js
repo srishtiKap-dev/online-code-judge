@@ -122,7 +122,7 @@ print('Hello, world!')
             <br></br>
             <textarea
               value={sampleInput}
-              class="min-h-[50px] w-9/12 rounded-[7px] border border-white-600 px-3 py-2.5 font-sans text-sm font-normal focus:border-1 focus:border-white-900 focus:outline-0 bg-gray-800 dark:bg-gray-700 dark:text-white border-b dark:bg-gray-800"
+              class="cursor-not-allowed min-h-[50px] w-9/12 rounded-[7px] border border-white-600 px-3 py-2.5 font-sans text-sm font-normal focus:border-1 focus:border-white-900 focus:outline-0 bg-gray-800 dark:bg-gray-700 dark:text-white border-b dark:bg-gray-800"
               placeholder=" "
             ></textarea>
           </div>
@@ -131,7 +131,7 @@ print('Hello, world!')
             <br></br>
             <textarea
               value={sampleOutput}
-              class="min-h-[50px] w-9/12 rounded-[7px] border border-white-600 px-3 py-2.5 font-sans text-sm font-normal focus:border-1 focus:border-white-900 focus:outline-0 bg-gray-800 dark:bg-gray-700 dark:text-white border-b dark:bg-gray-800"
+              class="cursor-not-allowed min-h-[50px] w-9/12 rounded-[7px] border border-white-600 px-3 py-2.5 font-sans text-sm font-normal focus:border-1 focus:border-white-900 focus:outline-0 bg-gray-800 dark:bg-gray-700 dark:text-white border-b dark:bg-gray-800"
               placeholder=" "
             ></textarea>
           </div>
@@ -183,7 +183,7 @@ print('Hello, world!')
               fontSize: 12,
               outline: "none",
               border: "none",
-              backgroundColor: "#cfd4b4",
+              backgroundColor: "#A0C8EA",
               height: "80%",
               overflowY: "scroll"
             }}

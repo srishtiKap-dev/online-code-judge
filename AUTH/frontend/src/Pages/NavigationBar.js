@@ -12,11 +12,8 @@ function NavBar() {
       setLoggedIn(true);
       setFirstname(localStorage.getItem("firstname"));
       setLastname(localStorage.getItem("lastname"));
-      console.log("lastname:", lastname);
-      console.log("firstname", firstname);
     }
     if (localStorage.getItem("isAdmin") == "true") {
-      console.log("isetting true");
       setIsAdmin(true);
     }
   }, []);

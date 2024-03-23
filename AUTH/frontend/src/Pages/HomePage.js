@@ -2,6 +2,9 @@ import NavBar from "./NavigationBar";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
+import toast, { Toaster } from "react-hot-toast";
+
 function HomePage() {
   const nav = useNavigate();
   const [questionList, setQuestionList] = useState([]);
@@ -18,7 +21,6 @@ function HomePage() {
       .get(`${apiUrl}/questions`)
       .then(res => {
         setQuestionList(res.data.questionList);
-        console.log("Here", questionList);
       })
       .catch(error => {
         console.log("Error occurred in GET Questions API", error);
@@ -28,6 +30,18 @@ function HomePage() {
   const getProblemDescription = async question => {
     title = question.title;
     nav("/description/" + title);
+  };
+
+  const deleteProblem = async title => {
+    await axios
+      .post(`${apiUrl}/delete/${title}`)
+      .then(res => {
+        toast.success("Problem Deleted successfully!");
+        getQuestionsList();
+      })
+      .catch(error => {
+        console.log("Error occurred in DELETE Questions API", error);
+      });
   };
 
   return (
@@ -46,24 +60,37 @@ function HomePage() {
               <th scope="col" className="px-6 py-3">
                 Difficulty
               </th>
+              <th scope="col" className="px-6 py-3"></th>
+              <th scope="col" className="px-6 py-3"></th>
             </tr>
           </thead>
           <tbody>
             {questionList.map((question, index) => {
               return (
                 <tr
-                  onClick={() => getProblemDescription(question)}
                   key={index}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
                   <th
+                    onClick={() => getProblemDescription(question)}
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 dark:text-white"
+                    className="px-6 py-4 font-medium text-gray-900 dark:text-white cursor-pointer"
                   >
                     {question.title}
                   </th>
                   <td className="px-6 py-4">{question.type}</td>
                   <td className="px-6 py-4">{question.difficulty}</td>
+                  <td className="px-6 py-4">
+                    <BsFillTrashFill
+                      onClick={() => deleteProblem(question.title)}
+                      className="cursor-pointer"
+                    ></BsFillTrashFill>
+                  </td>
+                  <td>
+                    <span className="px-6 py-4">
+                      <BsFillPencilFill></BsFillPencilFill>
+                    </span>
+                  </td>
                 </tr>
               );
             })}
@@ -144,6 +171,7 @@ function HomePage() {
           </ul>
         </nav> */}
       </div>
+      <Toaster />
     </div>
   );
 }
