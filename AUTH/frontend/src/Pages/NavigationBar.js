@@ -25,6 +25,9 @@ function NavBar() {
         aria-label="Global"
       >
         <div className="hidden lg:flex lg:flex-1 lg:justify-start lg:gap-x-12 text-white">
+          <label className="text-xl font-bold leading-6 text-white-900">
+            CodeNinja
+          </label>
           {isLoggedIn && (
             <button
               onClick={() => {

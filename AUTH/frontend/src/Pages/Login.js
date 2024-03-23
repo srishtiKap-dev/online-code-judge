@@ -44,9 +44,9 @@ function Login() {
   };
 
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-r from-yellow-100 via-yellow-50 to-yellow-100">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Login to your Account
         </h2>
       </div>
