@@ -81,6 +81,8 @@ function NavBar() {
                 setLoggedIn(false);
                 localStorage.removeItem("jwtToken");
                 localStorage.removeItem("isAdmin");
+                localStorage.removeItem("firstname");
+                localStorage.removeItem("lastname");
                 nav("/");
               }}
               className="text-sm font-semibold leading-6 text-white-900"
