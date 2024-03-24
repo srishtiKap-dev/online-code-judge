@@ -108,7 +108,7 @@ print('Hello, world!')
       });
   };
   return (
-    <div className="bg-white border-b dark:bg-gray-800 h-screen text-sm text-white bg-gray-50 dark:bg-gray-700 dark:text-white">
+    <div className="h-screen text-sm text-black dark:text-black">
       <NavBar />
       <div className="grid grid-cols-2 text-left m-8 font-mono">
         <div className="leading-10">
@@ -122,7 +122,7 @@ print('Hello, world!')
             <br></br>
             <textarea
               value={sampleInput}
-              class="cursor-not-allowed min-h-[50px] w-9/12 rounded-[7px] border border-white-600 px-3 py-2.5 font-sans text-sm font-normal focus:border-1 focus:border-white-900 focus:outline-0 bg-gray-800 dark:bg-gray-700 dark:text-white border-b dark:bg-gray-800"
+              class="cursor-not-allowed min-h-[50px] w-9/12 rounded-[7px] border border-black-600 px-3 py-2.5 font-sans text-sm font-normal focus:outline-0 bg-gray-300 dark:text-black border-b dark:bg-gray-300"
               placeholder=" "
             ></textarea>
           </div>
@@ -131,7 +131,7 @@ print('Hello, world!')
             <br></br>
             <textarea
               value={sampleOutput}
-              class="cursor-not-allowed min-h-[50px] w-9/12 rounded-[7px] border border-white-600 px-3 py-2.5 font-sans text-sm font-normal focus:border-1 focus:border-white-900 focus:outline-0 bg-gray-800 dark:bg-gray-700 dark:text-white border-b dark:bg-gray-800"
+              class="cursor-not-allowed min-h-[50px] w-9/12 rounded-[7px] border border-black-600 px-3 py-2.5 font-sans text-sm font-normal focus:outline-0 bg-gray-300 dark:text-black border-b dark:bg-gray-300"
               placeholder=" "
             ></textarea>
           </div>
@@ -143,7 +143,7 @@ print('Hello, world!')
               onChange={e => {
                 setinput(e.target.value);
               }}
-              class="min-h-[100px] w-9/12 resize-none rounded-[7px] border border-white-600 px-3 py-2.5 font-sans text-sm font-normal focus:border-1 focus:border-white-900 focus:outline-0 bg-gray-800 dark:bg-gray-700 dark:text-white border-b dark:bg-gray-800"
+              class="min-h-[100px] w-9/12 resize-none rounded-[7px] border border-black-600 px-3 py-2.5 font-sans text-sm font-normal focus:outline-0 bg-gray-300 dark:bg-gray-700 dark:text-black border-b dark:bg-gray-300"
               placeholder=" "
             ></textarea>
           </div>
@@ -155,7 +155,7 @@ print('Hello, world!')
               setOutput("");
               setDefaultCode(e.target.value);
             }}
-            className="select-box border border-gray-300 rounded-lg py-1.5 px-4 mb-2 focus:outline-none border-b dark:bg-gray-800"
+            className="select-box border border-black rounded-lg py-1.5 px-4 mb-2 focus:outline-none border-b dark:bg-white"
           >
             <option value="cpp">C++</option>
             <option value="py">Python</option>
@@ -183,7 +183,7 @@ print('Hello, world!')
               fontSize: 12,
               outline: "none",
               border: "none",
-              backgroundColor: "#A0C8EA",
+              backgroundColor: "#F4DD81",
               height: "80%",
               overflowY: "scroll"
             }}
@@ -192,7 +192,7 @@ print('Hello, world!')
             {output && (
               <div className="mt-4">
                 Output:
-                <div className="bg-gray-100 text-black rounded-md shadow-md p-3 text-sm">
+                <div className="text-black rounded-md shadow-md p-3 text-sm bg-gray-300 dark:bg-gray-700 dark:text-black border-b dark:bg-gray-300">
                   {output}
                 </div>
               </div>

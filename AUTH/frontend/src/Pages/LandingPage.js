@@ -3,7 +3,7 @@ function LandingPage() {
   return (
     <div>
       <NavBar />
-      <div className="pt-12 tracking-wider min-h-screen bg-gradient-to-r from-yellow-100 via-yellow-50 to-yellow-100">
+      <div className="pt-12 tracking-wider h-full">
         <br></br>
         <h1 className="mt-14 text-6xl font-bold">Skills speak louder than </h1>
         <h1 className="mt-2 text-6xl font-bold">words</h1>
