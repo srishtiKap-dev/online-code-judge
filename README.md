@@ -60,7 +60,7 @@ Follow these steps to set up and run the project locally:
 
 ![image](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/5a9d3ef2-91bb-4680-952c-c8394aadad31)
 ![image](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/eaf83867-69d3-4e2e-a2e2-b80306bedd1d)
-![image](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/c76d8297-ce99-4cdc-9342-0cf95c6649f9)
+![image](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/b2683344-0fc5-413e-96ba-df0110f2f1d9)
 ![image](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/7ea60eef-7c8f-41c4-b020-11bda3b19cdb)
 ![image](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/e0c23a7f-d3bc-48be-8c4e-50ed47c0c7a3)
 
