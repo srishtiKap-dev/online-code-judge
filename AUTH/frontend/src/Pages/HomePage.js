@@ -10,10 +10,14 @@ function HomePage() {
   const [questionList, setQuestionList] = useState([]);
   const apiUrl = process.env.REACT_APP_API_URL;
   let { title } = useParams();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // to load questions by default
   useEffect(() => {
     getQuestionsList();
+    if (localStorage.getItem("isAdmin") == "true") {
+      setIsAdmin(true);
+    }
   }, []);
 
   const getQuestionsList = async event => {
@@ -60,8 +64,8 @@ function HomePage() {
               <th scope="col" className="px-6 py-3">
                 Difficulty
               </th>
-              <th scope="col" className="px-6 py-3"></th>
-              <th scope="col" className="px-6 py-3"></th>
+              {isAdmin && <th scope="col" className="px-6 py-3"></th>}
+              {isAdmin && <th scope="col" className="px-6 py-3"></th>}
             </tr>
           </thead>
           <tbody>
@@ -80,17 +84,21 @@ function HomePage() {
                   </th>
                   <td className="px-6 py-4">{question.type}</td>
                   <td className="px-6 py-4">{question.difficulty}</td>
-                  <td className="px-6 py-4">
-                    <BsFillTrashFill
-                      onClick={() => deleteProblem(question.title)}
-                      className="cursor-pointer"
-                    ></BsFillTrashFill>
-                  </td>
-                  <td>
-                    <span className="px-6 py-4">
-                      <BsFillPencilFill></BsFillPencilFill>
-                    </span>
-                  </td>
+                  {isAdmin && (
+                    <td className="px-6 py-4">
+                      <BsFillTrashFill
+                        onClick={() => deleteProblem(question.title)}
+                        className="cursor-pointer"
+                      ></BsFillTrashFill>
+                    </td>
+                  )}
+                  {isAdmin && (
+                    <td>
+                      <span className="px-6 py-4">
+                        <BsFillPencilFill></BsFillPencilFill>
+                      </span>
+                    </td>
+                  )}
                 </tr>
               );
             })}
