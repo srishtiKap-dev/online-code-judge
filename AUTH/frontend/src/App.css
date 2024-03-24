@@ -1,3 +1,7 @@
+.active{
+  color:skyblue;
+  font-weight: 500;
+}
 .App {
   text-align: center;
 }
