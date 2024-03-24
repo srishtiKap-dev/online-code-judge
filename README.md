@@ -6,12 +6,11 @@ This is a full-stack web application designed to serve as an online code judge p
 
 ### For Users
 
-- **Programming Challenges**: Users can access a variety of programming challenges across different difficulty levels.
 - **Submission**: Users can submit their solutions to the challenges and receive feedback on their code's correctness and efficiency.
 
 ### For Admins
 
-- **Question Creation**: Admins can create new programming challenges for users to solve, including specifying the problem statement, input/output format, and test cases.
+- **Question Creation**: Admins can create new programming challenges for users to solve, including specifying the problem statement, input/output format, and test cases. Admins can also edit and delete the questions.
 
 ## Project Structure
 
@@ -33,7 +32,7 @@ The frontend is built using React.js and utilizes various libraries for UI compo
 
 ### Backend
 
-The backend is built using Node.js and Express.js framework for handling HTTP requests. MongoDB is used as the database to store user information, challenges, submissions, etc. The directory structure is as follows:
+The backend is built using Node.js and Express.js framework for handling HTTP requests. MongoDB is used as the database to store user information, questions, submissions, etc. The directory structure is as follows:
 
 - **src**
   - **controllers**: Contains route handlers for different API endpoints.
@@ -64,7 +63,10 @@ Follow these steps to set up and run the project locally:
 ![Screenshot 2024-03-17 at 8 56 50 PM](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/a3254114-d8fd-4ca8-a545-96d78d3a7233)
 ![Screenshot 2024-03-17 at 8 56 36 PM](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/c695b337-8755-434b-9d0b-e281326380a8)
 
+## Project Demo Link
+
+https://www.loom.com/share/f9e5f7db3f404fafa253d04aa0ecb84b?sid=e5008cb2-b030-4adf-8e0e-c1fccbc82513
 
 ## Acknowledgements
 
-- Special thanks to Mentors at AlgoU for inspiration and reference.
+- Special thanks to Mentors at AlgoU for inspiration, references & support.
