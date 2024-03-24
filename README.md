@@ -58,14 +58,21 @@ Follow these steps to set up and run the project locally:
 
 ## Platform Look
 
-![Screenshot 2024-03-17 at 8 52 32 PM](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/dc685df3-4cb1-4079-b359-27e5ed45585d)
-![Screenshot 2024-03-17 at 8 55 23 PM](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/78ba5671-10ac-49de-a4dd-62780b7f046d)
-![Screenshot 2024-03-17 at 8 56 50 PM](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/a3254114-d8fd-4ca8-a545-96d78d3a7233)
-![Screenshot 2024-03-17 at 8 56 36 PM](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/c695b337-8755-434b-9d0b-e281326380a8)
+![image](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/5a9d3ef2-91bb-4680-952c-c8394aadad31)
+![image](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/eaf83867-69d3-4e2e-a2e2-b80306bedd1d)
+![image](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/c76d8297-ce99-4cdc-9342-0cf95c6649f9)
+![image](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/7ea60eef-7c8f-41c4-b020-11bda3b19cdb)
+![image](https://github.com/srishtiKap-dev/online-code-judge/assets/157288989/e0c23a7f-d3bc-48be-8c4e-50ed47c0c7a3)
 
 ## Project Demo Link
 
 https://www.loom.com/share/f9e5f7db3f404fafa253d04aa0ecb84b?sid=e5008cb2-b030-4adf-8e0e-c1fccbc82513
+
+## Project Deployment
+
+Frontend is deployed on Vercel. Backend is deployed on aws. **In order to access the URL, user should allow Insecure Content in browser settings. This is because SSL certificate is not added currently in AWS.**
+
+URL is accessible at - https://code-ninja.vercel.app
 
 ## Acknowledgements
 
