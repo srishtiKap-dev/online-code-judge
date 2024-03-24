@@ -122,7 +122,7 @@ print('Hello, world!')
             <br></br>
             <textarea
               value={sampleInput}
-              class="cursor-not-allowed min-h-[50px] w-9/12 rounded-[7px] border border-black-600 px-3 py-2.5 font-sans text-sm font-normal focus:outline-0 bg-gray-300 dark:text-black border-b dark:bg-gray-300"
+              class="cursor-not-allowed min-h-[50px] w-9/12 rounded-[7px] border border-black-600 px-3 py-2.5 font-sans text-sm font-normal focus:outline-0 bg-gray-300 dark:text-black border-b dark:bg-gray-300 resize-none"
               placeholder=" "
             ></textarea>
           </div>
@@ -131,7 +131,7 @@ print('Hello, world!')
             <br></br>
             <textarea
               value={sampleOutput}
-              class="cursor-not-allowed min-h-[50px] w-9/12 rounded-[7px] border border-black-600 px-3 py-2.5 font-sans text-sm font-normal focus:outline-0 bg-gray-300 dark:text-black border-b dark:bg-gray-300"
+              class="cursor-not-allowed min-h-[50px] w-9/12 rounded-[7px] border border-black-600 px-3 py-2.5 font-sans text-sm font-normal focus:outline-0 bg-gray-300 dark:text-black border-b dark:bg-gray-300 resize-none"
               placeholder=" "
             ></textarea>
           </div>
@@ -143,7 +143,7 @@ print('Hello, world!')
               onChange={e => {
                 setinput(e.target.value);
               }}
-              class="min-h-[100px] w-9/12 resize-none rounded-[7px] border border-black-600 px-3 py-2.5 font-sans text-sm font-normal focus:outline-0 bg-gray-300 dark:bg-gray-700 dark:text-black border-b dark:bg-gray-300"
+              class="min-h-[100px] w-9/12 resize-none rounded-[7px] border border-black-600 px-3 py-2.5 font-sans text-sm font-normal focus:outline-0 bg-gray-300 dark:text-black border-b dark:bg-gray-300"
               placeholder=" "
             ></textarea>
           </div>
@@ -183,7 +183,7 @@ print('Hello, world!')
               fontSize: 12,
               outline: "none",
               border: "none",
-              backgroundColor: "#F4DD81",
+              backgroundColor: "#FDEBA5",
               height: "80%",
               overflowY: "scroll"
             }}
@@ -192,7 +192,7 @@ print('Hello, world!')
             {output && (
               <div className="mt-4">
                 Output:
-                <div className="text-black rounded-md shadow-md p-3 text-sm bg-gray-300 dark:bg-gray-700 dark:text-black border-b dark:bg-gray-300">
+                <div className="text-black rounded-md p-3 text-sm bg-gray-300 dark:text-black border-b dark:bg-gray-300">
                   {output}
                 </div>
               </div>
