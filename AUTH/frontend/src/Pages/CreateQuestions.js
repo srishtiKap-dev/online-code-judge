@@ -99,11 +99,11 @@ function CreateQuestions() {
     setSampleOutput("");
   };
   return (
-    <div className="bg-gray-800">
+    <div className="">
       <NavBar />
       <form
         ref={createQuestionForm}
-        className="bg-white border-b dark:bg-gray-800 h-screen text-sm text-white uppercase bg-gray-50 dark:bg-gray-700 dark:text-white"
+        className="bg-white border-b h-screen text-sm text-black uppercase"
         action="#"
         method="POST"
         onSubmit={handleSubmit}
@@ -119,7 +119,7 @@ function CreateQuestions() {
                 name="title"
                 type="title"
                 required
-                className="ml-4 block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-gray-600 sm:text-sm sm:leading-6 focus:border-2 focus:border-white-900 focus:outline-0 text-white bg-gray-700"
+                className="pl-2 ml-4 block w-full rounded-md py-1.5 sm:text-sm sm:leading-6 focus:border-2 focus:outline-0 text-black border border-gray-900 focus:outline-0"
                 onChange={e => setTitle(e.target.value)}
               />
             </div>
@@ -132,7 +132,7 @@ function CreateQuestions() {
               </label>
               <select
                 onChange={e => setType(e.target.value)}
-                className="ml-4 w-2/4 peer rounded-[7px] border bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-white-900 focus:outline-0 bg-gray-700"
+                className="ml-4 w-2/4 peer rounded-[7px] px-3 py-2.5 font-sans text-sm font-normal focus:border-2 focus:border-black-900 focus:outline-0 text-black border border-gray-900 "
               >
                 <option value="">Select Type</option>
                 <option value="String">String</option>
@@ -147,7 +147,7 @@ function CreateQuestions() {
               </label>
               <select
                 onChange={e => setDifficulty(e.target.value)}
-                className="ml-4 peer w-2/4 rounded-[7px] border bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-white-900 focus:outline-0 bg-gray-700"
+                className="ml-4 w-2/4 peer rounded-[7px] px-3 py-2.5 font-sans text-sm font-normal focus:border-2 focus:border-black-900 focus:outline-0 text-black border border-gray-900 "
               >
                 <option value="">Select Difficulty</option>
                 <option value="Easy">Easy</option>
@@ -163,7 +163,7 @@ function CreateQuestions() {
                 onChange={e => {
                   setSampleInput(e.target.value);
                 }}
-                className="w-full resize-none rounded-[7px] border border-black-600 px-3 py-2.5 text-sm font-normal focus:border-2 text-white bg-gray-700 focus:border-white-900 focus:outline-0"
+                className="w-full resize-none rounded-[7px] border border-gray-900 px-3 py-2.5 text-sm font-normal focus:border-2 text-black focus:border-black-900 focus:outline-0"
                 placeholder=" "
               ></textarea>
             </div>
@@ -175,7 +175,7 @@ function CreateQuestions() {
                 onChange={e => {
                   setSampleOutput(e.target.value);
                 }}
-                className="w-full resize-none rounded-[7px] border border-black-600 px-3 py-2.5 text-sm font-normal focus:border-2 text-white bg-gray-700 focus:border-white-900 focus:outline-0"
+                className="w-full resize-none rounded-[7px] border border-gray-900 px-3 py-2.5 text-sm font-normal focus:border-2 text-black focus:border-black-900 focus:outline-0"
                 placeholder=" "
               ></textarea>
             </div>
@@ -186,7 +186,7 @@ function CreateQuestions() {
               <button
                 type="button"
                 onClick={onUploadFile}
-                className="bg-white-500 text-white py-2 px-4 rounded-lg border border-gray-300 py-1.5 px-4 mt-2 bg-gray-700"
+                className="text-black py-2 px-4 rounded-lg border border-gray-900 py-1.5 px-4 mt-2"
               >
                 Upload Input file
               </button>
@@ -205,7 +205,7 @@ function CreateQuestions() {
               <button
                 type="button"
                 onClick={onUploadOutputFile}
-                className="bg-white-500 text-white py-2 px-4 rounded-lg border border-gray-300 py-1.5 px-4 mt-2 bg-gray-700"
+                className="text-black py-2 px-4 rounded-lg border border-gray-900 py-1.5 px-4 mt-2"
               >
                 Upload Output file
               </button>
@@ -229,7 +229,7 @@ function CreateQuestions() {
               onChange={e => {
                 setDescription(e.target.value);
               }}
-              className="mt-4 min-h-[400px] w-full resize-none rounded-[7px] border border-black-600 px-3 py-2.5 text-sm font-normal focus:border-2 text-white bg-gray-700 focus:border-white-900 focus:outline-0"
+              className="mt-4 min-h-[400px] w-full resize-none rounded-[7px] border border-gray-900 px-3 py-2.5 text-sm font-normal focus:border-2 text-black focus:outline-0"
               placeholder=" "
             ></textarea>
 

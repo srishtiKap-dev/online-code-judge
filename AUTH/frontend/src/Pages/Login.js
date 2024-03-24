@@ -1,20 +1,17 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const nav = useNavigate();
-  //let { isRegistered } = useParams();
-  //console.log(isRegistered);
   const queryParams = new URLSearchParams(window.location.search);
   const isRegistered = queryParams.get("isRegistered");
 
   useEffect(() => {
-    console.log("isRegis:", isRegistered);
     if (isRegistered) {
       toast.success(`User registered successfully. Please login!`, {
         duration: 10000
